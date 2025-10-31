@@ -217,19 +217,20 @@ function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
     const paXcm = pa10 / 10;
     let html = `<h3>📐 Resultados para Talla ${datosTalla.etiqueta} (${datosTalla.numTalla}) - Pieza: **${pieza.toUpperCase()}**</h3>`;
 
-    let anchoCM, largoCM;
-    let anchoParaPuntos = 0; // Usado para calcular los puntos iniciales
+    let anchoCM, anchoParaPuntos, largoCM;
+    
+    // Cálculos de largos comunes
+    const largoBajoSisa = datosTalla.largoTotal - datosTalla.largoSisa; // Largo hasta el inicio de la sisa
+    const pasadasBajoSisa = Math.round(largoBajoSisa * paXcm);
+    const pasadasHastaEscote = Math.round((datosTalla.largoTotal - datosTalla.escoteBajoSisa) * paXcm);
+    largoCM = datosTalla.largoTotal;
 
     if (pieza === 'espalda') {
         // La espalda es la mitad del contorno de pecho
         anchoCM = datosTalla.pechoCirc / 2;
-        largoCM = datosTalla.largoTotal;
         anchoParaPuntos = anchoCM;
         
         const puntosIniciales = Math.round(anchoParaPuntos * pXcm);
-        const largoBajoSisa = datosTalla.largoTotal - datosTalla.largoSisa; // Largo hasta el inicio de la sisa
-        const pasadasBajoSisa = Math.round(largoBajoSisa * paXcm);
-        const pasadasHastaEscote = Math.round((datosTalla.largoTotal - datosTalla.escoteBajoSisa) * paXcm);
         
         html += `
             <p class="resultado-principal">Puntos a tejer para empezar (ancho ${anchoCM.toFixed(1)} cm): **${puntosIniciales} puntos**</p>
@@ -248,52 +249,72 @@ function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
         `;
 
     } else if (pieza === 'delantero') {
-        // El delantero es la mitad del contorno de pecho
-        anchoCM = datosTalla.pechoCirc / 2;
-        largoCM = datosTalla.largoTotal;
-        anchoParaPuntos = anchoCM;
         
-        const puntosIniciales = Math.round(anchoParaPuntos * pXcm);
-        const largoBajoSisa = datosTalla.largoTotal - datosTalla.largoSisa;
-        const pasadasBajoSisa = Math.round(largoBajoSisa * paXcm);
-        const pasadasHastaEscote = Math.round((datosTalla.largoTotal - datosTalla.escoteBajoSisa) * paXcm);
-        
-        html += `
-            <p class="resultado-principal">Puntos a tejer para empezar (ancho ${anchoCM.toFixed(1)} cm): **${puntosIniciales} puntos**</p>
-            <p>Largo total de la pieza (desde bajo a cuello): **${largoCM.toFixed(1)} cm**</p>
-            <hr>
-            <p>
-                **Inicio de la Sisa:** A los **${largoBajoSisa.toFixed(1)} cm** desde el bajo. 
-                (Aprox. **${pasadasBajoSisa} pasadas**).
-                <span class="nota-medida">(Sisa: ${datosTalla.largoSisa.toFixed(1)} cm)</span>
-            </p>
-            <p>
-                **Inicio del Escote (Redondo):** A los **${datosTalla.largoTotal - datosTalla.escoteBajoSisa} cm** desde el bajo. 
-                (Aprox. **${pasadasHastaEscote} pasadas**).
-                <span class="nota-medida">(Escote: ${datosTalla.escoteBajoSisa.toFixed(1)} cm de profundidad desde el hombro)</span>
-            </p>
-        `;
-        
-        if (tipoPrenda === 'chaqueta') {
-            html += `<div class="nota-adicional">
-                **NOTA ADICIONAL - CHAQEUETA:** Estos puntos son para la mitad del delantero. 
-                Recuerda que si elijes tejer la pieza **entera** para luego dividirla, el total de puntos será el mismo que la espalda. 
-                Si tejes las **dos mitades** por separado, deberás sumar los puntos de la **tapeta/borde** (ej: 5-10 puntos) al resultado para *cada lado*.
-            </div>`;
+        if (tipoPrenda === 'jersey') {
+             // Si es un jersey, el delantero es igual a la espalda
+            anchoCM = datosTalla.pechoCirc / 2;
+            anchoParaPuntos = anchoCM;
+            
+            const puntosIniciales = Math.round(anchoParaPuntos * pXcm);
+
+            html += `
+                <p class="resultado-principal">Puntos a tejer para empezar (ancho ${anchoCM.toFixed(1)} cm): **${puntosIniciales} puntos**</p>
+                <p>Largo total de la pieza (desde bajo a cuello): **${largoCM.toFixed(1)} cm**</p>
+                <hr>
+                <p>
+                    **Inicio de la Sisa:** A los **${largoBajoSisa.toFixed(1)} cm** desde el bajo. 
+                    (Aprox. **${pasadasBajoSisa} pasadas**).
+                    <span class="nota-medida">(Sisa: ${datosTalla.largoSisa.toFixed(1)} cm)</span>
+                </p>
+                <p>
+                    **Inicio del Escote (Redondo):** A los **${datosTalla.largoTotal - datosTalla.escoteBajoSisa} cm** desde el bajo. 
+                    (Aprox. **${pasadasHastaEscote} pasadas**).
+                    <span class="nota-medida">(Escote: ${datosTalla.escoteBajoSisa.toFixed(1)} cm de profundidad desde el hombro)</span>
+                </p>
+            `;
+            
+        } else if (tipoPrenda === 'chaqueta') {
+            // ¡ESTA ES LA CORRECCIÓN! El ancho del delantero es la mitad del ancho de la espalda.
+            const anchoEspalda = datosTalla.pechoCirc / 2;
+            anchoCM = anchoEspalda / 2; // La mitad del ancho de espalda para CADA delantero
+            anchoParaPuntos = anchoCM;
+            
+            const puntosIniciales = Math.round(anchoParaPuntos * pXcm);
+            
+            html += `
+                <p class="resultado-principal">Puntos a tejer para empezar para **UNA MITAD** del delantero (ancho ${anchoCM.toFixed(1)} cm): **${puntosIniciales} puntos**</p>
+                <p>Largo total de la pieza (desde bajo a cuello): **${largoCM.toFixed(1)} cm**</p>
+                <hr>
+                <p>
+                    **Inicio de la Sisa:** A los **${largoBajoSisa.toFixed(1)} cm** desde el bajo. 
+                    (Aprox. **${pasadasBajoSisa} pasadas**).
+                    <span class="nota-medida">(Sisa: ${datosTalla.largoSisa.toFixed(1)} cm)</span>
+                </p>
+                <p>
+                    **Inicio del Escote (Redondo):** A los **${datosTalla.largoTotal - datosTalla.escoteBajoSisa} cm** desde el bajo. 
+                    (Aprox. **${pasadasHastaEscote} pasadas**).
+                    <span class="nota-medida">(Escote: ${datosTalla.escoteBajoSisa.toFixed(1)} cm de profundidad desde el hombro)</span>
+                </p>
+
+            <div class="nota-adicional">
+                **NOTA ADICIONAL - CHAQEUETA:** Estos puntos (${puntosIniciales} puntos) corresponden a **UNA** de las mitades del delantero (derecha o izquierda).
+                ¡Recuerda que debes sumar los puntos necesarios para la **tapeta/borde** (ej: 5-10 puntos) a este resultado!
+            </div>
+            `;
         }
 
     } else if (pieza === 'mangas') {
-        anchoCM = datosTalla.pechoCirc * 0.2; // Ancho del puño (aproximado, solo para referencia)
+        // La lógica de la manga se mantiene, ya que es independiente del tipo de prenda.
+        anchoCM = datosTalla.pechoCirc * 0.2; 
         largoCM = datosTalla.largoManga;
-        anchoParaPuntos = datosTalla.anchoEspalda / 2; // Puntos iniciales se basan en el ancho del puño o el ancho que elija la tejedora
         
-        const puntosSisa = Math.round(datosTalla.pechoCirc * 0.4 * pXcm); // Un ancho en la sisa (ej: 40% del contorno)
+        const puntosSisa = Math.round(datosTalla.pechoCirc * 0.4 * pXcm); // Puntos que tendrá el ancho de la sisa
         const puntosIniciales = Math.round(datosTalla.pechoCirc * 0.18 * pXcm); // Puntos del puño, aprox. 18% del contorno
         const pasadasLargoManga = Math.round(largoCM * paXcm);
         
         html += `
             <p class="resultado-principal">Puntos a tejer para empezar (Puño, ancho aprox. ${(datosTalla.pechoCirc * 0.18).toFixed(1)} cm): **${puntosIniciales} puntos**</p>
-            <p>Puntos que deberá tener la manga al llegar a la sisa (ancho ${datosTalla.largoSisa.toFixed(1)} cm): **${puntosSisa} puntos** (para encajar en la sisa)</p>
+            <p>Puntos que deberá tener la manga al llegar a la sisa (ancho aprox. ${datosTalla.largoSisa.toFixed(1)} cm): **${puntosSisa} puntos**</p>
             <p>Largo total de la manga (desde sisa a puño): **${largoCM.toFixed(1)} cm**</p>
             <hr>
             <p>
