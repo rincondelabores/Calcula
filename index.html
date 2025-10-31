@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Puntos - Rincón de Labores</title>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css"> </head>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css"> 
+</head>
 <body>
 
     <header>
@@ -40,23 +41,32 @@
                     <option value="cm-deseados">Solo Regla de Tres (CM a Puntos)</option>
                 </select>
 
-                <label for="tipo-prenda">Tipo de Prenda:</label>
-                <select id="tipo-prenda">
-                    <option value="jersey">Jersey (Cerrado)</option>
-                    <option value="chaqueta">Chaqueta (Abierto)</option>
-                </select>
-
-                <label for="selector-talla">Talla:</label>
-                <select id="selector-talla"></select> <div id="pieza-div">
-                    <label for="pieza">Pieza a calcular (Solo para "Bajo"):</label>
-                    <select id="pieza">
-                        <option value="espalda">Espalda</option>
-                        <option value="delantero">Delantero</option>
-                        <option value="mangas">Mangas</option>
+                <div id="cm-deseados-div" style="display: none;">
+                    <label for="cm-deseados-input">Medida en Centímetros deseados:</label>
+                    <input type="number" id="cm-deseados-input" value="30" min="1" step="0.5">
+                </div>
+                
+                <div id="ropa-div">
+                    <label for="tipo-prenda">Tipo de Prenda:</label>
+                    <select id="tipo-prenda">
+                        <option value="jersey">Jersey (Cerrado)</option>
+                        <option value="chaqueta">Chaqueta (Abierto)</option>
                     </select>
+    
+                    <label for="selector-talla">Talla:</label>
+                    <select id="selector-talla"></select>
+    
+                    <div id="pieza-div" style="display: none;">
+                        <label for="pieza">Pieza a calcular (Solo para "Bajo"):</label>
+                        <select id="pieza">
+                            <option value="espalda">Espalda</option>
+                            <option value="delantero">Delantero</option>
+                            <option value="mangas">Mangas</option>
+                        </select>
+                    </div>
                 </div>
 
-                <button type="submit" style="background-color: #E8A946; color: white;">Calcular Puntos y Pasadas</button>
+                <button type="submit">Calcular Puntos y Pasadas</button>
             </section>
         </form>
 
@@ -66,7 +76,7 @@
 
     <footer>
         <aside class="tarjeta-tienda">
-            <div class="logo-tienda" style="font-family: 'Pacifico', cursive; font-size: 1.8em; color: #A67C52;">Rincón de Labores</div>
+            <div class="logo-tienda" style="font-family: 'Pacifico', cursive; font-size: 2em; color: white;">Rincón de Labores</div>
             <div class="datos-tienda">
                 <p>Lanas y Mercería</p>
                 <p>Alquerías, Murcia</p>
