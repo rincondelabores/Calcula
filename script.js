@@ -157,7 +157,7 @@ function agregarCalculoMangaBottomUp(html, pXcm, paXcm, pasadasValidas, datosTal
         <p>Puntos finales (Sisa): <strong>${puntosFinales}</strong> puntos.</p>
         <p>Puntos totales a aumentar: <strong>${totalIncrementoPuntadas}</strong> puntos.</p>`;
 
-    if (pasadasValidas) {
+    if (pasadasValidas && totalIncrementoPuntadas > 0) {
         const totalFilasParaManga = Math.round(datosTalla.largoManga * 10 * paXcm / 10); // Largo * Filas/cm
 
         // Aumentos se hacen de 2 en 2 (uno a cada lado)
@@ -167,23 +167,18 @@ function agregarCalculoMangaBottomUp(html, pXcm, paXcm, pasadasValidas, datosTal
         let aumentarFrecuenciaEnFilas = Math.floor(totalFilasParaManga / numeroDeEventosDeAumento);
         aumentarFrecuenciaEnFilas = Math.max(2, aumentarFrecuenciaEnFilas); // Mínimo de 2 pasadas
 
-        // Calcular el número real de veces que se aumentará
-        const vecesRealAumentar = Math.floor(totalFilasParaManga / aumentarFrecuenciaEnFilas);
-        
-        // Los aumentos sobrantes (por el redondeo) se hacen al principio o se reparten
-        const aumentosSobrantes = numeroDeEventosDeAumento - vecesRealAumentar;
-
         html += `<p>Total de pasadas a tejer: <strong>${totalFilasParaManga}</strong> pasadas.</p>
-            <p>Deberás realizar ${numeroDeEventosDeAumento} aumentos (uno a cada lado).</p>
+            <p>Deberás realizar **${numeroDeEventosDeAumento}** eventos de aumento (uno a cada lado).</p>
             <p class="resultado-principal-manga">
-                Se recomienda hacer 1 aumento a cada lado cada ${aumentarFrecuenciaEnFilas} pasadas.
-            </p>
-            <p class="nota-medida">
-                *Esto cubrirá ${vecesRealAumentar * 2} de los ${totalIncrementoPuntadas} puntos. Si ${aumentosSobrantes > 0 ? `sobran ${aumentosSobrantes * 2} puntos, repártelos al inicio.` : 'no sobran aumentos, simplemente sigue la secuencia.'}*
+                Se recomienda hacer 1 aumento a cada lado cada **${aumentarFrecuenciaEnFilas}** pasadas.
             </p>`;
+    } else if (totalIncrementoPuntadas <= 0) {
+        html += `<p class="resultado-principal-manga">
+            No es necesario realizar aumentos en la manga.
+        </p>`;
     } else {
         html += `<p class="resultado-principal-manga">
-            Reparte los ${totalIncrementoPuntadas}** puntos de aumento uniformemente a lo largo de los ${datosTalla.largoManga.toFixed(1)} cm de la manga.
+            Reparte los **${totalIncrementoPuntadas}** puntos de aumento uniformemente a lo largo de los **${datosTalla.largoManga.toFixed(1)} cm** de la manga.
         </p>
         <p class="nota-medida">
             *(Para la frecuencia exacta de pasadas, introduce el dato en el campo "Pasadas en 10cm").*
@@ -209,7 +204,7 @@ function agregarCalculoMangaTopDown(html, pXcm, paXcm, pasadasValidas, datosTall
         <p>Puntos finales (Puño): <strong>${puntosFinales}</strong> puntos.</p>
         <p>Puntos totales a disminuir: <strong>${totalDisminucionPuntadas}</strong> puntos.</p>`;
 
-    if (pasadasValidas) {
+    if (pasadasValidas && totalDisminucionPuntadas > 0) {
         const totalFilasParaManga = Math.round(datosTalla.largoManga * 10 * paXcm / 10); // Largo * Filas/cm
 
         // Disminuciones se hacen de 2 en 2 (uno a cada lado)
@@ -219,20 +214,16 @@ function agregarCalculoMangaTopDown(html, pXcm, paXcm, pasadasValidas, datosTall
         let disminuirFrecuenciaEnFilas = Math.floor(totalFilasParaManga / numeroDeEventosDeDisminucion);
         disminuirFrecuenciaEnFilas = Math.max(2, disminuirFrecuenciaEnFilas); // Mínimo de 2 pasadas
 
-        // Calcular el número real de veces que se disminuirá
-        const vecesRealDisminuir = Math.floor(totalFilasParaManga / disminuirFrecuenciaEnFilas);
-        
-        // Disminuciones sobrantes (por el redondeo)
-        const disminucionesSobrantes = numeroDeEventosDeDisminucion - vecesRealDisminuir;
 
         html += `<p>Total de pasadas a tejer: <strong>${totalFilasParaManga}</strong> pasadas.</p>
-            <p>Deberás realizar ${numeroDeEventosDeDisminucion} disminuciones (uno a cada lado).</p>
+            <p>Deberás realizar **${numeroDeEventosDeDisminucion}** eventos de disminución (uno a cada lado).</p>
             <p class="resultado-principal-manga">
-                Se recomienda hacer 1 disminución a cada lado cada ${disminuirFrecuenciaEnFilas} pasadas.
-            </p>
-            <p class="nota-medida">
-                *Esto cubrirá ${vecesRealDisminuir * 2} de los ${totalDisminucionPuntadas} puntos. Si ${disminucionesSobrantes > 0 ? `sobran ${disminucionesSobrantes * 2} puntos, repártelos uniformemente.` : 'no sobran disminuciones, simplemente sigue la secuencia.'}*
+                Se recomienda hacer 1 disminución a cada lado cada **${disminuirFrecuenciaEnFilas}** pasadas.
             </p>`;
+    } else if (totalDisminucionPuntadas <= 0) {
+        html += `<p class="resultado-principal-manga">
+            No es necesario realizar disminuciones en la manga.
+        </p>`;
     } else {
         html += `<p class="resultado-principal-manga">
             Reparte los **${totalDisminucionPuntadas}** puntos de disminución uniformemente a lo largo de los **${datosTalla.largoManga.toFixed(1)} cm** de la manga.
@@ -497,9 +488,8 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
         </p>
     `;
 
-    const pasadasCuello = pasadasValidas ? Math.round(2.5 * paXcm) : null;
     html += `<div class="nota-adicional">
-        SUGERENCIA PARA LA TIRA DEL CUELLO: tejer al menos ${pasadasValidas ? `<strong>${pasadasCuello} pasadas</strong> ` : ''} (aprox. 1.5cm) en punto elástico, punto bobo... para la terminación del cuello antes de dividir los puntos y empezar con los aumentos del ranglan.
+        SUGERENCIA PARA LA TIRA DEL CUELLO: Recomendamos tejer unas pasadas en punto elástico o cualquier punto deseado para el remate de la tira del cuello antes de hacer el reparto de puntos. La altura de la tira (en cm o pasadas) dependerá del diseño que elijas.
     </div>`;
     
     resultadosDiv.innerHTML = html;
