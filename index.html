@@ -3,118 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Puntos - Rincón de labores</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <title>Calculadora de Puntos y Tallas | Rincón de Labores</title>
+    
     <link rel="stylesheet" href="style.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <header>
-        <div class="container">
-            <h1 class="handwriting-font">🧶 Calculadora de Puntos para Tejer</h1>
-            <p>Rincón de Labores | Alquerías Murcia</p>
-        </div>
-    </header>
+    <div id="calculadora-app">
+        <h1 id="titulo-calculadora">Calculadora de Labores</h1>
 
-    <main>
-        <div class="container">
-            <form id="calculadora-form">
-
-                <section class="card">
-                    <h2>Tu Muestra de Tensión (10cm x 10cm)</h2>
-                    <div class="input-group">
-                        <label for="puntos-10cm">Puntos en 10cm:</label>
-                        <input type="number" id="puntos-10cm" required min="1" step="0.1">
-                    </div>
-                    <div class="input-group">
-                        <label for="pasadas-10cm">Pasadas (Hileras) en 10cm:</label>
-                        <input type="number" id="pasadas-10cm" min="0" step="1">
-                        <small>*(Opcional: necesario para calcular largos/pasadas)*</small>
-                    </div>
-                </section>
-
-                <section class="card">
-                    <h2>Método de Cálculo</h2>
-                    <div class="input-group">
-                        <label for="metodo">Elige el método:</label>
-                        <select id="metodo">
-                            <option value="desde-bajo">A. Empezar por el bajo </option>
-                            <option value="desde-escote">B. Empezar por el escote (Top-Down)</option>
-                            <option value="cm-deseados">C. cm deseados </option>
-                        </select>
-                    </div>
-                </section>
-
-                <section class="card" id="cm-deseados-div" style="display: none;">
-                    <h2>Medida Deseada</h2>
-                    <div class="input-group">
-                        <label for="cm-deseados-input">Medida en Centímetros (cm):</label>
-                        <input type="number" id="cm-deseados-input" min="1" step="0.1">
-                    </div>
-                </section>
-
-                <section class="card" id="ropa-div">
-                    <h2>Detalles de la Prenda</h2>
-                    
-                    <div class="input-group">
-                        <label for="selector-talla">Talla:</label>
-                        <select id="selector-talla" required>
-                            </select>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="tipo-prenda">Tipo de Prenda:</label>
-                        <select id="tipo-prenda">
-                            <option value="jersey">Jersey </option>
-                            <option value="chaqueta">Chaqueta / Cárdigan </option>
-                        </select>
-                    </div>
-
-                    <div class="input-group" id="pieza-div">
-                        <label for="pieza">Parte:</label>
-                        <select id="pieza">
-                            <option value="espalda">Espalda</option>
-                            <option value="delantero">Delantero</option>
-                            <option value="mangas">Manga </option>
-                        </select>
-                    </div>
-                </section>
-
-                <button type="submit">CALCULAR PUNTOS</button>
-
-            </form>
-
-            <section id="resultados" class="card" style="display: none;">
-                <h2>✨ Resultados</h2>
-                <div id="contenido-resultados">
-                    <p>Introduce tus datos y pulsa "CALCULAR PUNTOS".</p>
-                </div>
-            </section>
-        </div>
-    </main>
-    
-    <section id="contacto">
-        <div class="container">
-            <h2 class="handwriting-font">Rincón de labores</h2>
-            <p>Tu tienda de lanas y mercería en Alquerías, Murcia.</p>
-            <div class="contact-links">
-                <a href="https://wa.me/34659687211" target="_blank" class="contact-button whatsapp">
-                    📞 WhatsApp
-                </a>
-                <a href="https://www.instagram.com/rincondlabores/" target="_blank" class="contact-button instagram">
-                    📸 Instagram
-                </a>
-                <a href="https://www.facebook.com/rinconlabores/" target="_blank" class="contact-button facebook">
-                    👍 Facebook
-                </a>
-                <a href="http://maps.google.com/?q=Calle+Bando+de+la+Huerta,+21+30580+Alquerias+Murcia" target="_blank" class="contact-button location">
-                    📍 Dónde estamos
-                </a>
+        <form id="calculadora-form">
+            
+            <h2>Muestra de Tensión</h2>
+            <div class="input-group">
+                <label for="puntos-10cm">Puntos en 10 cm (Ancho):</label>
+                <input type="number" id="puntos-10cm" value="20" required min="1">
             </div>
-            <p class="address">Calle Bando de la Huerta, 21 · 30580 Alquerías, Murcia</p>
+            
+            <div class="input-group">
+                <label for="pasadas-10cm">Pasadas (hileras) en 10 cm (Largo) <span class="nota-medida">(Opcional, para calcular pasadas)</span>:</label>
+                <input type="number" id="pasadas-10cm" value="28" min="0">
+            </div>
+            
+            <hr>
+
+            <h2>Método de Cálculo</h2>
+            <div class="input-group">
+                <label for="metodo">Quiero calcular:</label>
+                <select id="metodo">
+                    <option value="cm-deseados">Puntos/Pasadas para CM Deseados</option>
+                    <option value="desde-escote">Prenda desde el Escote (Top-Down / Ranglan)</option>
+                    <option value="desde-bajo">Prenda desde el Bajo (Bottom-Up / Piezas)</option>
+                </select>
+            </div>
+            
+            <div id="cm-deseados-div" class="input-group">
+                <label for="cm-deseados-input">Medida en Centímetros Deseados:</label>
+                <input type="number" id="cm-deseados-input" value="100" min="1">
+            </div>
+
+            <div id="ropa-div" style="display: none;">
+                <div class="input-group">
+                    <label for="tipo-prenda">Tipo de Prenda:</label>
+                    <select id="tipo-prenda">
+                        <option value="jersey">Jersey/Suéter (cerrado)</option>
+                        <option value="chaqueta">Chaqueta/Cárdigan (abierto)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="selector-talla">Talla (Estándar):</label>
+                    <select id="selector-talla">
+                        </select>
+                </div>
+            </div>
+
+            <div id="pieza-div" style="display: none;">
+                <div class="input-group">
+                    <label for="pieza">Pieza a calcular (si es Bottom-Up):</label>
+                    <select id="pieza">
+                        <option value="espalda">Espalda</option>
+                        <option value="delantero">Delantero</option>
+                        <option value="mangas">Mangas</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit">Calcular Puntos y Medidas</button>
+
+        </form>
+
+        <hr>
+
+        <div id="resultados" style="display: none;">
+            <h2>Resultados</h2>
+            <div id="contenido-resultados">
+                </div>
         </div>
-    </section>
-    
+
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
