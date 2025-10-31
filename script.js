@@ -313,3 +313,59 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
 }
 
 // ... (Otras funciones como calcularCmDeseados y funciones auxiliares si existen)
+/**
+ * Realiza el cálculo para el método "Solo Regla de Tres (CM a Puntos)".
+ * Calcula puntos y pasadas para cualquier centímetro deseado.
+ * @param {number} p10 Puntos en 10cm.
+ * @param {number} pa10 Pasadas en 10cm (Opcional).
+ */
+function calcularCmDeseados(p10, pa10, datosTalla) {
+    const resultadosDiv = document.getElementById('contenido-resultados');
+    const pXcm = p10 / 10;
+    
+    // VALIDACIÓN DE PASADAS/VUELTAS
+    const pasadasValidas = pa10 > 0;
+    let paXcm = 0;
+    if (pasadasValidas) {
+        paXcm = pa10 / 10;
+    }
+
+    // Se necesita un campo de entrada para los CM deseados. 
+    // Por simplicidad, asumiremos que tienes un input con ID 'cm-deseados-input' 
+    // en tu HTML que solo se muestra con este método.
+
+    // *******************************************************************
+    // NOTA IMPORTANTE: Para que esto funcione, DEBES AÑADIR un nuevo input
+    // en tu HTML cuando se selecciona el método 'cm-deseados'.
+    // Por ahora, usamos un valor placeholder.
+    // *******************************************************************
+    const cmDeseados = 30; // <-- Cambia esto por el valor real del input del usuario
+    
+    const puntosNecesarios = Math.round(cmDeseados * pXcm);
+    const pasadasNecesarias = pasadasValidas ? Math.round(cmDeseados * paXcm) : null;
+    
+    let html = `<h3>📏 Resultados para ${cmDeseados.toFixed(1)} cm Deseados</h3>`;
+
+    html += `
+        <p class="resultado-principal">Puntos necesarios: **${puntosNecesarios} puntos**</p>
+        <hr>
+        <p>
+            Esto significa que para tejer **${cmDeseados.toFixed(1)} cm** de ancho,
+            necesitas montar **${puntosNecesarios} puntos**, basándote en tu muestra de **${p10} puntos en 10 cm**.
+        </p>
+    `;
+    
+    if (pasadasValidas) {
+        html += `
+            <p class="resultado-principal">Pasadas (hileras) necesarias:</p>
+            <p>
+                Para tejer **${cmDeseados.toFixed(1)} cm** de largo,
+                necesitas realizar **${pasadasNecesarias} pasadas**, basándote en tu muestra de **${pa10} pasadas en 10 cm**.
+            </p>
+        `;
+    } else {
+        html += `<p class="nota-medida">*(Para calcular las pasadas, introduce el dato en el campo de "Pasadas en 10cm")*</p>`;
+    }
+
+    resultadosDiv.innerHTML = html;
+}
