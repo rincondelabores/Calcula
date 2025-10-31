@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcula tus puntos con Rincón de Labores</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1 class="titulo-app">Calcula tus puntos con Rincón de Labores</h1>
+    </header>
+
+    <main class="contenedor-principal">
+        <section class="tarjeta entrada">
+            <h2>📏 Muestra de Tensión</h2>
+            <p class="nota-muestra">
+                **Importante:** Teje una muestra de 10cm con el mismo punto y aguja/ganchillo que usarás en tu proyecto.
+            </p>
+            <div class="grupo-input">
+                <label for="puntos10cm">Puntos en 10cm:</label>
+                <input type="number" id="puntos10cm" min="1" step="0.5" required placeholder="Ej: 20">
+            </div>
+            <div class="grupo-input">
+                <label for="pasadas10cm">Pasadas (vueltas/hileras) en 10cm:</label>
+                <input type="number" id="pasadas10cm" min="1" step="0.5" required placeholder="Ej: 28">
+            </div>
+        </section>
+
+        <section class="tarjeta seleccion">
+            <h2>🧶 Tu Proyecto</h2>
+
+            <div class="grupo-select">
+                <label for="metodoConstruccion">Método de Construcción:</label>
+                <select id="metodoConstruccion" required>
+                    <option value="">-- Elige la Construcción --</option>
+                    <option value="bajo">Empezar por el Bajo</option>
+                    <option value="escote">Empezar por el Escote (Top-Down)</option>
+                    <option value="cm">Solo Calcular CM Deseados</option>
+                </select>
+            </div>
+            
+            <div id="opciones-prenda" class="oculto">
+                <div class="grupo-select">
+                    <label for="tipoPrenda">Prenda:</label>
+                    <select id="tipoPrenda">
+                        <option value="">-- Elige la Prenda --</option>
+                        <option value="jersey">Jersey (Cerrado)</option>
+                        <option value="chaqueta">Chaqueta (Abierta)</option>
+                    </select>
+                </div>
+
+                <div class="grupo-select">
+                    <label for="talla">Talla:</label>
+                    <select id="talla" required>
+                        <option value="">-- Elige la Talla --</option>
+                    </select>
+                </div>
+
+                <div id="opciones-pieza" class="grupo-select">
+                    <label for="pieza">Pieza a Tejer:</label>
+                    <select id="pieza">
+                        <option value="">-- Elige la Pieza --</option>
+                        <option value="delantero">Delantero</option>
+                        <option value="espalda">Espalda</option>
+                        <option value="mangas">Mangas</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="opciones-cm" class="oculto">
+                <div class="grupo-input">
+                    <label for="cmDeseados">Centímetros Deseados para Tejer:</label>
+                    <input type="number" id="cmDeseados" min="1" step="0.5" placeholder="Ej: 30">
+                </div>
+            </div>
+
+            <button onclick="calcularPuntos()">Calcular Puntos y Pasadas</button>
+        </section>
+
+        <section class="tarjeta resultados" id="resultados">
+            <h2>✨ Resultados del Cálculo</h2>
+            <div id="mensaje-error" class="mensaje-error oculto"></div>
+            <div id="contenido-resultados">
+                <p>Introduce los datos para ver los resultados.</p>
+            </div>
+        </section>
+        
+        <aside class="tarjeta-tienda">
+            <div class="logo-tienda">Rincón de Labores</div>
+            <div class="datos-tienda">
+                <p>Lanas y Mercería</p>
+                <p>Alquerías, Murcia</p>
+            </div>
+        </aside>
+    </main>
+
+    <footer>
+        <p>¿Necesitas ayuda o más lanas? Contáctanos:</p>
+        <p class="email-contacto">rincondelabores@gmail.com</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
