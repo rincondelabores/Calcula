@@ -325,8 +325,8 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
     
     if (tipoPrenda === 'chaqueta') {
         html += `<div class="nota-adicional">
-            **ATENCIÓN - CHAQEUETA:** Los ${puntosDelantero} puntos son para **UNA** de las mitades del delantero. 
-            Recuerda sumar los puntos adicionales (ej: 5 a 10 puntos) para la **tapeta o borde** a cada mitad.
+            A tener en cuenta - CHAQUETA: Los ${puntosDelantero} puntos son para UNA de las mitades del delantero. 
+            Recuerda sumar los puntos adicionales para la TAPETA a cada mitad.
         </div>`;
     }
 
