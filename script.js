@@ -12,7 +12,7 @@ const DATOS_TALLAS = [
     { etiqueta: '12-18 meses', numTalla: '', pechoCirc: 56, largoTotal: 33, largoManga: 25, largoSisa: 13, ranglan: 18, escoteBajoSisa: 8, cuelloCirc: 27 },
     { etiqueta: '2 años', numTalla: '', pechoCirc: 58, largoTotal: 35, largoManga: 28, largoSisa: 14, ranglan: 19, escoteBajoSisa: 8, cuelloCirc: 28 },
     { etiqueta: '4 años', numTalla: '', pechoCirc: 62, largoTotal: 40, largoManga: 32, largoSisa: 15, ranglan: 20, escoteBajoSisa: 9, cuelloCirc: 29 },
-    { etiqueta: '6 años', numTalla: '', pechoCirc: 66, largoTotal: 44, largoManga: 36, largoSisa: 16, ranglan: 21, escoteBajoSisa: 9, cuelloCirc: 30 },
+    { etiqueta: '6 años', numTalla: '', pechoCirc: 70, largoTotal: 48, largoManga: 40, largoSisa: 17, ranglan: 22, escoteBajoSisa: 10, cuelloCirc: 31 },
     { etiqueta: '8 años', numTalla: '', pechoCirc: 70, largoTotal: 48, largoManga: 40, largoSisa: 17, ranglan: 22, escoteBajoSisa: 10, cuelloCirc: 31 },
     { etiqueta: '10 años', numTalla: '', pechoCirc: 76, largoTotal: 52, largoManga: 44, largoSisa: 18, ranglan: 23, escoteBajoSisa: 10, cuelloCirc: 32 },
     // Tallas de Adulto (Sisa y Ranglan corregidos)
@@ -305,7 +305,7 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
 
     html += `
         <p class="resultado-principal">Puntos para montar en el escote (ancho ${anchoCuelloCM.toFixed(1)} cm): <strong>${puntosMontadosTotal} puntos</strong></p>
-        <p class="nota-medida">*(Calculado como el 80% del contorno de cabeza + ${holguraCuelloCM} cm de holgura adicional si es adulto)*</p>
+        <p class="nota-medida">*(Calculado como el 80% del contorno de cabeza ${holguraCuelloCM > 0 ? `+ ${holguraCuelloCM} cm de holgura adicional` : ''})*</p>
         <hr>
         
         <h4>Reparto de Puntos Inicial (Método ${tipoPrenda === 'chaqueta' ? '1/6 - 1/6 - 2/6 - 1/6 - 1/6' : '1/6 - 2/6 - 2/6 - 1/6'}):</h4>
