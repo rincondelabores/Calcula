@@ -1,27 +1,27 @@
 // =================================================================================
-// 1. DATOS DE TALLAS
+// 1. DATOS DE TALLAS (ACTUALIZADO: Incluye 'cuelloCirc' para cálculos Top-Down fiables)
 // =================================================================================
 
 const DATOS_TALLAS = [
-    // Tallas de Bebé/Niño (numTalla vacío para no mostrarlo)
-    { etiqueta: 'Prematuro (00)', numTalla: '', pechoCirc: 38, largoTotal: 18, largoManga: 13, largoSisa: 7, ranglan: 11, escoteBajoSisa: 4 },
-    { etiqueta: '0 (Recién Nacido)', numTalla: '', pechoCirc: 40, largoTotal: 20, largoManga: 16, largoSisa: 8, ranglan: 13, escoteBajoSisa: 6 },
-    { etiqueta: '1-3 meses', numTalla: '', pechoCirc: 46, largoTotal: 24, largoManga: 18, largoSisa: 10, ranglan: 15, escoteBajoSisa: 7 },
-    { etiqueta: '3-6 meses', numTalla: '', pechoCirc: 50, largoTotal: 27, largoManga: 20, largoSisa: 11, ranglan: 16, escoteBajoSisa: 7 },
-    { etiqueta: '6-12 meses', numTalla: '', pechoCirc: 54, largoTotal: 30, largoManga: 22, largoSisa: 12, ranglan: 17, escoteBajoSisa: 7 },
-    { etiqueta: '12-18 meses', numTalla: '', pechoCirc: 56, largoTotal: 33, largoManga: 25, largoSisa: 13, ranglan: 18, escoteBajoSisa: 8 },
-    { etiqueta: '2 años', numTalla: '', pechoCirc: 58, largoTotal: 35, largoManga: 28, largoSisa: 14, ranglan: 19, escoteBajoSisa: 8 },
-    { etiqueta: '4 años', numTalla: '', pechoCirc: 62, largoTotal: 40, largoManga: 32, largoSisa: 15, ranglan: 20, escoteBajoSisa: 9 },
-    { etiqueta: '6 años', numTalla: '', pechoCirc: 66, largoTotal: 44, largoManga: 36, largoSisa: 16, ranglan: 21, escoteBajoSisa: 9 },
-    { etiqueta: '8 años', numTalla: '', pechoCirc: 70, largoTotal: 48, largoManga: 40, largoSisa: 17, ranglan: 22, escoteBajoSisa: 10 },
-    { etiqueta: '10 años', numTalla: '', pechoCirc: 76, largoTotal: 52, largoManga: 44, largoSisa: 18, ranglan: 23, escoteBajoSisa: 10 },
-    // Tallas de Adulto (numTalla visible solo en estas)
-    { etiqueta: 'XS', numTalla: '34-36', pechoCirc: 80, largoTotal: 58, largoManga: 56, largoSisa: 20, ranglan: 32, escoteBajoSisa: 14 },
-    { etiqueta: 'S', numTalla: '38-40', pechoCirc: 88, largoTotal: 60, largoManga: 58, largoSisa: 22, ranglan: 36, escoteBajoSisa: 15 },
-    { etiqueta: 'M', numTalla: '40-42', pechoCirc: 98, largoTotal: 62, largoManga: 59, largoSisa: 24, ranglan: 38, escoteBajoSisa: 16 },
-    { etiqueta: 'L', numTalla: '42-44', pechoCirc: 108, largoTotal: 64, largoManga: 60, largoSisa: 26, ranglan: 40, escoteBajoSisa: 17 },
-    { etiqueta: 'XL', numTalla: '46-48', pechoCirc: 118, largoTotal: 66, largoManga: 61, largoSisa: 28, ranglan: 42, escoteBajoSisa: 18 },
-    { etiqueta: 'XXL', numTalla: '50-52', pechoCirc: 128, largoTotal: 68, largoManga: 62, largoSisa: 30, ranglan: 44, escoteBajoSisa: 19 }
+    // Tallas de Bebé/Niño (cuelloCirc fijo según estándares de patrones)
+    { etiqueta: 'Prematuro (00)', numTalla: '', pechoCirc: 38, largoTotal: 18, largoManga: 13, largoSisa: 7, ranglan: 11, escoteBajoSisa: 4, cuelloCirc: 20 },
+    { etiqueta: '0 (Recién Nacido)', numTalla: '', pechoCirc: 40, largoTotal: 20, largoManga: 16, largoSisa: 8, ranglan: 13, escoteBajoSisa: 6, cuelloCirc: 22 },
+    { etiqueta: '1-3 meses', numTalla: '', pechoCirc: 46, largoTotal: 24, largoManga: 18, largoSisa: 10, ranglan: 15, escoteBajoSisa: 7, cuelloCirc: 24 },
+    { etiqueta: '3-6 meses', numTalla: '', pechoCirc: 50, largoTotal: 27, largoManga: 20, largoSisa: 11, ranglan: 16, escoteBajoSisa: 7, cuelloCirc: 25 },
+    { etiqueta: '6-12 meses', numTalla: '', pechoCirc: 54, largoTotal: 30, largoManga: 22, largoSisa: 12, ranglan: 17, escoteBajoSisa: 7, cuelloCirc: 26 },
+    { etiqueta: '12-18 meses', numTalla: '', pechoCirc: 56, largoTotal: 33, largoManga: 25, largoSisa: 13, ranglan: 18, escoteBajoSisa: 8, cuelloCirc: 27 },
+    { etiqueta: '2 años', numTalla: '', pechoCirc: 58, largoTotal: 35, largoManga: 28, largoSisa: 14, ranglan: 19, escoteBajoSisa: 8, cuelloCirc: 28 },
+    { etiqueta: '4 años', numTalla: '', pechoCirc: 62, largoTotal: 40, largoManga: 32, largoSisa: 15, ranglan: 20, escoteBajoSisa: 9, cuelloCirc: 29 },
+    { etiqueta: '6 años', numTalla: '', pechoCirc: 66, largoTotal: 44, largoManga: 36, largoSisa: 16, ranglan: 21, escoteBajoSisa: 9, cuelloCirc: 30 },
+    { etiqueta: '8 años', numTalla: '', pechoCirc: 70, largoTotal: 48, largoManga: 40, largoSisa: 17, ranglan: 22, escoteBajoSisa: 10, cuelloCirc: 31 },
+    { etiqueta: '10 años', numTalla: '', pechoCirc: 76, largoTotal: 52, largoManga: 44, largoSisa: 18, ranglan: 23, escoteBajoSisa: 10, cuelloCirc: 32 },
+    // Tallas de Adulto
+    { etiqueta: 'XS', numTalla: '34-36', pechoCirc: 80, largoTotal: 58, largoManga: 56, largoSisa: 20, ranglan: 32, escoteBajoSisa: 14, cuelloCirc: 34 },
+    { etiqueta: 'S', numTalla: '38-40', pechoCirc: 88, largoTotal: 60, largoManga: 58, largoSisa: 22, ranglan: 36, escoteBajoSisa: 15, cuelloCirc: 35 },
+    { etiqueta: 'M', numTalla: '40-42', pechoCirc: 98, largoTotal: 62, largoManga: 59, largoSisa: 24, ranglan: 38, escoteBajoSisa: 16, cuelloCirc: 36 },
+    { etiqueta: 'L', numTalla: '42-44', pechoCirc: 108, largoTotal: 64, largoManga: 60, largoSisa: 26, ranglan: 40, escoteBajoSisa: 17, cuelloCirc: 38 },
+    { etiqueta: 'XL', numTalla: '46-48', pechoCirc: 118, largoTotal: 66, largoManga: 61, largoSisa: 28, ranglan: 42, escoteBajoSisa: 18, cuelloCirc: 40 },
+    { etiqueta: 'XXL', numTalla: '50-52', pechoCirc: 128, largoTotal: 68, largoManga: 62, largoSisa: 30, ranglan: 44, escoteBajoSisa: 19, cuelloCirc: 42 }
 ];
 
 // =================================================================================
@@ -53,7 +53,7 @@ function cargarTallas(datosTallas) {
     });
 }
 
-// MODIFICADO: Muestra/oculta campos según el método elegido
+// Muestra/oculta campos según el método elegido
 function actualizarUI() {
     const metodo = document.getElementById('metodo').value;
     const piezaDiv = document.getElementById('pieza-div');
@@ -131,7 +131,6 @@ function getTallaEtiqueta(datosTalla) {
 
 /**
  * Realiza el cálculo para el método "Empezar por el Bajo".
- * (Corregido el formato, lógica de chaqueta, y pasadas opcionales)
  */
 function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
     const resultadosDiv = document.getElementById('contenido-resultados');
@@ -228,9 +227,10 @@ function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
     resultadosDiv.innerHTML = html;
 }
 
+
 /**
  * Realiza el cálculo para el método "Empezar por el Escote (Top-Down - Ranglán)".
- * (CORREGIDO: Fórmula de distribución de puntos más fiable: 3, 3, 1, 1).
+ * (CORREGIDO: Usa el dato FIJO de cuelloCirc de la BD para asegurar que la cabeza pase).
  */
 function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
     const resultadosDiv = document.getElementById('contenido-resultados');
@@ -240,7 +240,8 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
     let paXcm = pasadasValidas ? pa10 / 10 : 0;
 
     // 1. CÁLCULO DE PUNTOS TOTALES DEL CUELLO
-    const anchoCuelloCM = datosTalla.pechoCirc * 0.3; // Ancho del cuello estándar (30% del pecho)
+    // *** SE USA EL DATO FIJO cuelloCirc ***
+    const anchoCuelloCM = datosTalla.cuelloCirc; 
     const puntosMontadosTotal = Math.round(anchoCuelloCM * pXcm); 
     
     const puntosRanglanFijos = 8;
@@ -259,25 +260,23 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
     let puntosEspalda = Math.round(pEspaldaBase);
     let puntosMangas = Math.round(pMangasBase);
     
-    // El delantero se ajusta para cerrar la suma, asegurando la precisión.
+    // El delantero se ajusta para cerrar la suma.
     let puntosDelanteroTotal = puntosRestantes - puntosEspalda - (puntosMangas * 2);
 
     // Ajuste para chaquetas: el delantero total se divide entre dos
     let puntosDelantero = puntosDelanteroTotal;
     if (tipoPrenda === 'chaqueta') {
         puntosDelantero = Math.round(puntosDelanteroTotal / 2);
-        // Si es chaqueta, el delantero total *2 (dos piezas) + espalda + 2 mangas + 8 ranglan
-        // El total montado debe incluir las dos mitades del delantero.
+        // Ajuste fino: la diferencia del redondeo se suma/resta a la espalda
         const sumaCheck = puntosEspalda + (puntosMangas * 2) + (puntosDelantero * 2) + puntosRanglanFijos;
-        // Si la suma de los redondeos no coincide con el total inicial, ajustamos la espalda ligeramente.
         if (sumaCheck !== puntosMontadosTotal) {
-             puntosEspalda += puntosMontadosTotal - sumaCheck; // Ajuste fino
+             puntosEspalda += puntosMontadosTotal - sumaCheck; 
         }
     } else {
-        // Jersey: Ajustar el delantero (una sola pieza)
+        // Jersey: Ajuste fino
         const sumaCheck = puntosEspalda + (puntosMangas * 2) + puntosDelanteroTotal + puntosRanglanFijos;
         if (sumaCheck !== puntosMontadosTotal) {
-             puntosEspalda += puntosMontadosTotal - sumaCheck; // Ajuste fino
+             puntosEspalda += puntosMontadosTotal - sumaCheck; 
              puntosDelantero = puntosDelanteroTotal;
         } else {
             puntosDelantero = puntosDelanteroTotal;
@@ -296,7 +295,7 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
     let html = `<h3>📐 Resultados Top-Down (Escote) para Talla ${tallaEtiquetaCompleta}</h3>`;
 
     html += `
-        <p class="resultado-principal">Puntos para montar en el escote (ancho ${anchoCuelloCM.toFixed(1)} cm): **${puntosMontadosTotal} puntos**</p>
+        <p class="resultado-principal">Puntos para montar en el escote (ancho **${anchoCuelloCM.toFixed(1)} cm**): **${puntosMontadosTotal} puntos**</p>
         <hr>
         
         <h4>Reparto de Puntos Inicial (Antes de empezar a hacer aumentos):</h4>
@@ -338,5 +337,44 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
         SUGERENCIA DE CUELLO: Sugerimos tejer al menos ${pasadasValidas ? `**${pasadasCuello} pasadas** ` : ''} (aprox. 2.5cm) en punto elástico (ej: 1/1, 2/2) para la terminación del cuello antes de dividir los puntos y empezar con los aumentos del ranglan.
     </div>`;
     
+    resultadosDiv.innerHTML = html;
+}
+
+/**
+ * Realiza el cálculo para el método "Solo Regla de Tres (CM a Puntos)".
+ */
+function calcularCmDeseados(p10, pa10, cmDeseados) {
+    const resultadosDiv = document.getElementById('contenido-resultados');
+    const pXcm = p10 / 10;
+    
+    const pasadasValidas = pa10 > 0;
+    let paXcm = pasadasValidas ? pa10 / 10 : 0;
+    
+    const puntosNecesarios = Math.round(cmDeseados * pXcm);
+    const pasadasNecesarias = pasadasValidas ? Math.round(cmDeseados * paXcm) : null;
+    
+    let html = `<h3>📏 Resultados para ${cmDeseados.toFixed(1)} cm Deseados</h3>`;
+
+    html += `
+        <p class="resultado-principal">Puntos necesarios: **${puntosNecesarios} puntos**</p>
+        <hr>
+        <p>
+            Esto significa que para tejer **${cmDeseados.toFixed(1)} cm** de ancho,
+            necesitas montar **${puntosNecesarios} puntos**, basándote en tu muestra de **${p10} puntos en 10 cm**.
+        </p>
+    `;
+    
+    if (pasadasValidas) {
+        html += `
+            <p class="resultado-principal">Pasadas (hileras) necesarias:</p>
+            <p>
+                Para tejer **${cmDeseados.toFixed(1)} cm** de largo,
+                necesitas realizar **${pasadasNecesarias} pasadas**, basándote en tu muestra de **${pa10} pasadas en 10 cm**.
+            </p>
+        `;
+    } else {
+        html += `<p class="nota-medida">*(Para calcular las pasadas, introduce el dato en el campo de "Pasadas en 10cm")*</p>`;
+    }
+
     resultadosDiv.innerHTML = html;
 }
