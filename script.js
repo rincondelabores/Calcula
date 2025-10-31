@@ -1,5 +1,5 @@
 // =================================================================================
-// 1. DATOS DE TALLAS (FINAL: Ranglan y Sisa de Adulto ajustados)
+// 1. DATOS DE TALLAS (FINAL: Ranglan y Sisa de Adulto ajustados y tallas infantiles corregidas)
 // =================================================================================
 
 const DATOS_TALLAS = [
@@ -12,7 +12,7 @@ const DATOS_TALLAS = [
     { etiqueta: '12-18 meses', numTalla: '', pechoCirc: 56, largoTotal: 33, largoManga: 25, largoSisa: 13, ranglan: 18, escoteBajoSisa: 8, cuelloCirc: 27 },
     { etiqueta: '2 años', numTalla: '', pechoCirc: 58, largoTotal: 35, largoManga: 28, largoSisa: 14, ranglan: 19, escoteBajoSisa: 8, cuelloCirc: 28 },
     { etiqueta: '4 años', numTalla: '', pechoCirc: 62, largoTotal: 40, largoManga: 32, largoSisa: 15, ranglan: 20, escoteBajoSisa: 9, cuelloCirc: 29 },
-    { etiqueta: '6 años', numTalla: '', pechoCirc: 70, largoTotal: 48, largoManga: 40, largoSisa: 17, ranglan: 22, escoteBajoSisa: 10, cuelloCirc: 31 },
+    { etiqueta: '6 años', numTalla: '', pechoCirc: 66, largoTotal: 44, largoManga: 36, largoSisa: 16, ranglan: 21, escoteBajoSisa: 9, cuelloCirc: 30 },
     { etiqueta: '8 años', numTalla: '', pechoCirc: 70, largoTotal: 48, largoManga: 40, largoSisa: 17, ranglan: 22, escoteBajoSisa: 10, cuelloCirc: 31 },
     { etiqueta: '10 años', numTalla: '', pechoCirc: 76, largoTotal: 52, largoManga: 44, largoSisa: 18, ranglan: 23, escoteBajoSisa: 10, cuelloCirc: 32 },
     // Tallas de Adulto (Sisa y Ranglan corregidos)
@@ -30,6 +30,7 @@ const DATOS_TALLAS = [
 
 document.addEventListener('DOMContentLoaded', () => {
     cargarTallas(DATOS_TALLAS);
+    // Aseguramos que el evento está asociado al formulario
     document.getElementById('calculadora-form').addEventListener('submit', manejarCalculo);
     document.getElementById('metodo').addEventListener('change', actualizarUI);
     actualizarUI(); // Ejecuta al inicio para establecer la vista por defecto
@@ -78,9 +79,11 @@ function actualizarUI() {
 }
 
 function manejarCalculo(event) {
-    event.preventDefault();
+    // Evita que el formulario se envíe de la forma tradicional y recargue la página
+    event.preventDefault(); 
+    
     const resultadosDiv = document.getElementById('contenido-resultados');
-    resultadosDiv.style.display = 'block'; 
+    document.getElementById('resultados').style.display = 'block'; // Muestra la sección de resultados
 
     const p10 = parseFloat(document.getElementById('puntos-10cm').value);
     const pa10Str = document.getElementById('pasadas-10cm').value;
