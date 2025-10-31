@@ -4,93 +4,117 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Puntos - Rincón de labores</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    </head>
+</head>
 <body>
-    <div class="contenedor">
-        <h1>🧶 Calculadora de Puntos para Tejer</h1>
-        <p class="subtitulo">Rincón de Labores | Alquerías Murcia</p>
 
-        <form id="calculadora-form">
-            <fieldset>
-                <legend>Tu Muestra de Tensión (10cm x 10cm)</legend>
-                
-                <div class="campo-grupo">
-                    <label for="puntos-10cm">Puntos en 10cm:</label>
-                    <input type="number" id="puntos-10cm" required min="1" step="0.5" placeholder="Ej: 22">
-                </div>
-                
-                <div class="campo-grupo">
-                    <label for="pasadas-10cm">Pasadas (Hileras) en 10cm:</label>
-                    <input type="number" id="pasadas-10cm" min="0" step="1" placeholder="Ej: 30 (Opcional)">
-                </div>
-            </fieldset>
-            
-            <fieldset>
-                <legend>Método de Cálculo</legend>
-                
-                <div class="campo-grupo">
-                    <label for="metodo">Elige el método:</label>
-                    <select id="metodo" name="metodo" required>
-                        <option value="desde-bajo">A. Empezar por el Bajo (Piezas)</option>
-                        <option value="desde-escote">B. Empezar por el Escote (Top-Down)</option>
-                        <option value="cm-deseados">C. Regla de Tres (cm a Puntos)</option>
-                    </select>
-                </div>
-            </fieldset>
+    <header>
+        <div class="container">
+            <h1 class="handwriting-font">🧶 Calculadora de Puntos para Tejer</h1>
+            <p>Rincón de Labores | Alquerías Murcia</p>
+        </div>
+    </header>
 
-            <div id="cm-deseados-div" style="display:none;">
-                <fieldset>
-                    <legend>Medida Deseada</legend>
-                    <div class="campo-grupo">
-                        <label for="cm-deseados-input">Medida en Centímetros (cm):</label>
-                        <input type="number" id="cm-deseados-input" min="1" step="0.5" placeholder="Ej: 40.5">
+    <main>
+        <div class="container">
+            <form id="calculadora-form">
+
+                <section class="card">
+                    <h2>Tu Muestra de Tensión (10cm x 10cm)</h2>
+                    <div class="input-group">
+                        <label for="puntos-10cm">Puntos en 10cm:</label>
+                        <input type="number" id="puntos-10cm" required min="1" step="0.1">
                     </div>
-                </fieldset>
-            </div>
-            
-            <div id="ropa-div" style="display:block;">
-                <fieldset>
-                    <legend>Detalles de la Prenda</legend>
+                    <div class="input-group">
+                        <label for="pasadas-10cm">Pasadas (Hileras) en 10cm:</label>
+                        <input type="number" id="pasadas-10cm" min="0" step="1">
+                        <small>*(Opcional: necesario para calcular largos/pasadas)*</small>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <h2>Método de Cálculo</h2>
+                    <div class="input-group">
+                        <label for="metodo">Elige el método:</label>
+                        <select id="metodo">
+                            <option value="desde-bajo">A. Empezar por el Bajo (Piezas)</option>
+                            <option value="desde-escote">B. Empezar por el Escote (Top-Down)</option>
+                            <option value="cm-deseados">C. Regla de Tres (cm a Puntos)</option>
+                        </select>
+                    </div>
+                </section>
+
+                <section class="card" id="cm-deseados-div" style="display: none;">
+                    <h2>Medida Deseada</h2>
+                    <div class="input-group">
+                        <label for="cm-deseados-input">Medida en Centímetros (cm):</label>
+                        <input type="number" id="cm-deseados-input" min="1" step="0.1">
+                    </div>
+                </section>
+
+                <section class="card" id="ropa-div">
+                    <h2>Detalles de la Prenda</h2>
                     
-                    <div class="campo-grupo">
+                    <div class="input-group">
                         <label for="selector-talla">Talla a calcular:</label>
-                        <select id="selector-talla" name="talla" required>
+                        <select id="selector-talla" required>
                             </select>
                     </div>
 
-                    <div class="campo-grupo">
+                    <div class="input-group">
                         <label for="tipo-prenda">Tipo de Prenda:</label>
-                        <select id="tipo-prenda" name="tipo-prenda" required>
+                        <select id="tipo-prenda">
                             <option value="jersey">Jersey (Cuerpo completo)</option>
                             <option value="chaqueta">Chaqueta / Cárdigan (Delantero dividido)</option>
                         </select>
                     </div>
 
-                    <div id="pieza-div" class="campo-grupo" style="display:block;">
+                    <div class="input-group" id="pieza-div">
                         <label for="pieza">Pieza a calcular:</label>
-                        <select id="pieza" name="pieza" required>
+                        <select id="pieza">
                             <option value="espalda">Espalda</option>
                             <option value="delantero">Delantero</option>
-                            <option value="mangas">Mangas</option>
+                            <option value="mangas">Mangas (Par)</option>
                         </select>
                     </div>
-                </fieldset>
-            </div>
-            
-            <button type="submit" class="boton-calcular">CALCULAR PUNTOS</button>
-        </form>
+                </section>
 
-        <div id="resultados" class="resultados-contenedor">
-            <h2>✨ Resultados</h2>
-            <div id="contenido-resultados">
-                <p class="mensaje-inicio">Introduce tus datos y pulsa "CALCULAR PUNTOS".</p>
-            </div>
+                <button type="submit">CALCULAR PUNTOS</button>
+
+            </form>
+
+            <section id="resultados" class="card" style="display: none;">
+                <h2>✨ Resultados</h2>
+                <div id="contenido-resultados">
+                    <p>Introduce tus datos y pulsa "CALCULAR PUNTOS".</p>
+                </div>
+            </section>
         </div>
-    </div>
+    </main>
     
-    <p class="pie-pagina">Creado para **Rincón de labores**, tu tienda de lanas y mercería en Alquerías Murcia.</p>
-
+    <section id="contacto">
+        <div class="container">
+            <h2 class="handwriting-font">Rincón de labores</h2>
+            <p>Tu tienda de lanas y mercería en Alquerías, Murcia.</p>
+            <div class="contact-links">
+                <a href="https://wa.me/34659687211" target="_blank" class="contact-button whatsapp">
+                    📞 WhatsApp
+                </a>
+                <a href="https://www.instagram.com/rincondlabores/" target="_blank" class="contact-button instagram">
+                    📸 Instagram
+                </a>
+                <a href="https://www.facebook.com/rinconlabores/" target="_blank" class="contact-button facebook">
+                    👍 Facebook
+                </a>
+                <a href="http://maps.google.com/?q=Calle+Bando+de+la+Huerta,+21+30580+Alquerias+Murcia" target="_blank" class="contact-button location">
+                    📍 Dónde estamos
+                </a>
+            </div>
+            <p class="address">Calle Bando de la Huerta, 21 · 30580 Alquerías, Murcia</p>
+        </div>
+    </section>
+    
     <script src="script.js"></script>
 </body>
 </html>
