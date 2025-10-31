@@ -140,7 +140,7 @@ function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
     let paXcm = pasadasValidas ? pa10 / 10 : 0;
 
     const tallaEtiquetaCompleta = getTallaEtiqueta(datosTalla);
-    let html = `<h3>📐 Resultados para Talla ${tallaEtiquetaCompleta} - Pieza: **${pieza.toUpperCase()}**</h3>`;
+    let html = `<h3>📐 Resultados para Talla ${tallaEtiquetaCompleta} - Pieza: ${pieza.toUpperCase()}</h3>`;
     let anchoCM, largoCM;
     
     // Estimación de Profundidad de Escote Frontal
@@ -166,17 +166,17 @@ function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
         const puntosIniciales = Math.round(anchoCM * pXcm);
         
         html += `
-            <p class="resultado-principal">Puntos a tejer para empezar (ancho ${anchoCM.toFixed(1)} cm): **${puntosIniciales} puntos**</p>
+            <p class="resultado-principal">Puntos a tejer para empezar (ancho ${anchoCM.toFixed(1)} cm): <strong>${puntosIniciales} puntos</strong></p>
             <p>Largo total de la pieza (desde bajo a cuello): ${largoCM.toFixed(1)} cm</p>
             <hr>
             <p>
                 Inicio de la Sisa: A los ${largoBajoSisa.toFixed(1)} cm desde el bajo. 
-                ${pasadasValidas ? `(Aprox. **${pasadasBajoSisa} pasadas**).` : ''}
+                ${pasadasValidas ? `(Aproximadamente <strong>${pasadasBajoSisa} pasadas</strong>).` : ''}
                 <span class="nota-medida">(Sisa: ${datosTalla.largoSisa.toFixed(1)} cm)</span>
             </p>
             <p>
                 Inicio del Escote (Redondo): A los ${(datosTalla.largoTotal - datosTalla.escoteBajoSisa).toFixed(1)} cm desde el bajo. 
-                ${pasadasValidas ? `(Aprox. **${pasadasHastaEscote} pasadas**).` : ''}
+                ${pasadasValidas ? `(Aproximadamente <strong>${pasadasHastaEscote} pasadas</strong>).` : ''}
                 <span class="nota-medida">(Para un escote redondo estándar, la curva delantera tendrá una profundidad de aprox. ${profundidadEscoteFrontalCM.toFixed(1)} cm).</span>
             </p>
         `;
@@ -187,22 +187,22 @@ function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
         const puntosIniciales = Math.round(anchoCM * pXcm);
         
         html += `
-            <p class="resultado-principal">Puntos a tejer para empezar para **UNA MITAD** del delantero (ancho ${anchoCM.toFixed(1)} cm): **${puntosIniciales} puntos**</p>
+            <p class="resultado-principal">Puntos a tejer para empezar para **UNA MITAD** del delantero (ancho ${anchoCM.toFixed(1)} cm): <strong>${puntosIniciales} puntos</strong></p>
             <p>Largo total de la pieza (desde bajo a cuello): ${largoCM.toFixed(1)} cm</p>
             <hr>
             <p>
                 Inicio de la Sisa: A los ${largoBajoSisa.toFixed(1)} cm desde el bajo. 
-                ${pasadasValidas ? `(Aprox. **${pasadasBajoSisa} pasadas**).` : ''}
+                ${pasadasValidas ? `(Aproximadamente <strong>${pasadasBajoSisa} pasadas</strong>).` : ''}
                 <span class="nota-medida">(Sisa: ${datosTalla.largoSisa.toFixed(1)} cm)</span>
             </p>
             <p>
                 Inicio del Escote (Redondo): A los ${(datosTalla.largoTotal - datosTalla.escoteBajoSisa).toFixed(1)} cm desde el bajo. 
-                ${pasadasValidas ? `(Aprox. **${pasadasHastaEscote} pasadas**).` : ''}
+                ${pasadasValidas ? `(Aproximadamente <strong>${pasadasHastaEscote} pasadas</strong>).` : ''}
                 <span class="nota-medida">(Para un escote redondo estándar, la curva delantera tendrá una profundidad de aprox. ${profundidadEscoteFrontalCM.toFixed(1)} cm).</span>
             </p>
 
             <div class="nota-adicional">
-                **NOTA ADICIONAL - CHAQEUETA:** Estos puntos (${puntosIniciales} puntos) corresponden a **UNA** de las mitades del delantero (derecha o izquierda). ¡Recuerda que debes sumar los puntos necesarios para la **tapeta/borde** (ej: 5-10 puntos) a este resultado!
+                **NOTA IMPORTANTE - CHAQEUETA:** Estos puntos (${puntosIniciales} puntos) corresponden a **UNA** de las mitades del delantero (derecha o izquierda). ¡Recuerda que debes sumar los puntos necesarios para la **tapeta o borde** (ej: 5-10 puntos) a este resultado!
             </div>
         `;
 
@@ -217,14 +217,14 @@ function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
         const anchoMangaSisaCM = datosTalla.largoSisa * 2; 
 
         html += `
-            <p class="resultado-principal">Puntos a tejer para empezar (Puño, ancho aprox. ${(datosTalla.pechoCirc * 0.18).toFixed(1)} cm): **${puntosIniciales} puntos**</p>
-            <p>Puntos que deberá tener la manga al llegar a la sisa (Ancho Aprox. ${anchoMangaSisaCM.toFixed(1)} cm): **${puntosSisa} puntos**</p>
+            <p class="resultado-principal">Puntos a tejer para empezar (Puño, ancho aprox. ${(datosTalla.pechoCirc * 0.18).toFixed(1)} cm): <strong>${puntosIniciales} puntos</strong></p>
+            <p>Puntos que deberá tener la manga al llegar a la sisa (Ancho Aprox. ${anchoMangaSisaCM.toFixed(1)} cm): <strong>${puntosSisa} puntos</strong></p>
             <p>Largo total de la manga (desde sisa a puño): ${largoCM.toFixed(1)} cm</p>
             <hr>
             <p>
                 Deberás tejer ${largoCM.toFixed(1)} cm. Aumenta puntos de manera uniforme para pasar de ${puntosIniciales} puntos a ${puntosSisa} puntos.
             </p>
-            ${pasadasValidas ? `<p>Total de pasadas hasta el puño: **${pasadasLargoManga} pasadas**.</p>` : ''}
+            ${pasadasValidas ? `<p>Total de pasadas hasta el puño: <strong>${pasadasLargoManga} pasadas</strong>.</p>` : ''}
         `;
     }
     
@@ -302,15 +302,15 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
     let html = `<h3>📐 Resultados Top-Down (Escote) para Talla ${tallaEtiquetaCompleta}</h3>`;
 
     html += `
-        <p class="resultado-principal">Puntos para montar en el escote (ancho **${anchoCuelloCM.toFixed(1)} cm** con ${holguraCuelloCM.toFixed(1)} cm de holgura): **${puntosMontadosTotal} puntos**</p>
+        <p class="resultado-principal">Puntos para montar en el escote (ancho ${anchoCuelloCM.toFixed(1)} cm con ${holguraCuelloCM.toFixed(1)} cm de holgura): <strong>${puntosMontadosTotal} puntos</strong></p>
         <hr>
         
         <h4>Reparto de Puntos Inicial (Antes de empezar a hacer aumentos):</h4>
         <ul>
-            <li>Espalda: **${puntosEspalda}** puntos.</li>
-            <li>Mangas (c/u): **${puntosMangas}** puntos.</li>
-            <li>Delantero (${tipoPrenda === 'chaqueta' ? 'cada mitad' : 'pieza única'}): **${puntosDelantero}** puntos.</li>
-            <li>Ranglan (4 líneas): 2 puntos por línea (**8 puntos** en total).</li>
+            <li>Espalda: <strong>${puntosEspalda}</strong> puntos.</li>
+            <li>Mangas (cada una): <strong>${puntosMangas}</strong> puntos.</li>
+            <li>Delantero (${tipoPrenda === 'chaqueta' ? 'cada mitad' : 'pieza única'}): <strong>${puntosDelantero}</strong> puntos.</li>
+            <li>Ranglan (4 líneas): 2 puntos por línea (8 puntos en total).</li>
         </ul>
         <p class="nota-medida">*(El total de puntos iniciales es ${puntosMontadosTotal} puntos)*</p>
     `;
@@ -318,7 +318,7 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
     if (tipoPrenda === 'chaqueta') {
         html += `<div class="nota-adicional">
             **ATENCIÓN - CHAQEUETA:** Los ${puntosDelantero} puntos son para **UNA** de las mitades del delantero. 
-            Recuerda sumar los puntos adicionales (ej: 5 a 10 puntos) para la **tapeta/borde** a cada mitad.
+            Recuerda sumar los puntos adicionales (ej: 5 a 10 puntos) para la **tapeta o borde** a cada mitad.
         </div>`;
     }
 
@@ -327,21 +327,21 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
         <h4>Instrucciones de Largo:</h4>
         <p>
             Largo del Ranglan (Diagonal Escote a Sisa): Teje hasta que la línea de ranglan mida ${largoRanglanCM.toFixed(1)} cm.
-            ${pasadasValidas ? `<span class="nota-medida">(Aprox. **${pasadasRanglan} pasadas** de aumento).</span>` : ''}
+            ${pasadasValidas ? `<span class="nota-medida">(Aproximadamente <strong>${pasadasRanglan} pasadas</strong> de aumento).</span>` : ''}
         </p>
         <p>
             Largo de las Mangas (desde sisa a puño): ${largoMangaCM.toFixed(1)} cm.
-            ${pasadasValidas ? `<span class="nota-medida">(Aprox. **${pasadasLargoManga} pasadas**).</span>` : ''}
+            ${pasadasValidas ? `<span class="nota-medida">(Aproximadamente <strong>${pasadasLargoManga} pasadas</strong>).</span>` : ''}
         </p>
         <p>
             Largo del Cuerpo (desde sisa al bajo): ${largoCuerpoCM.toFixed(1)} cm.
-            ${pasadasValidas ? `<span class="nota-medida">(Aprox. **${pasadasLargoCuerpo} pasadas**).</span>` : ''}
+            ${pasadasValidas ? `<span class="nota-medida">(Aproximadamente <strong>${pasadasLargoCuerpo} pasadas</strong>).</span>` : ''}
         </p>
     `;
     
     const pasadasCuello = pasadasValidas ? Math.round(2.5 * paXcm) : null;
     html += `<div class="nota-adicional">
-        SUGERENCIA DE CUELLO: Sugerimos tejer al menos ${pasadasValidas ? `**${pasadasCuello} pasadas** ` : ''} (aprox. 2.5cm) en punto elástico (ej: 1/1, 2/2) para la terminación del cuello antes de dividir los puntos y empezar con los aumentos del ranglan.
+        SUGERENCIA DE CUELLO: Sugerimos tejer al menos ${pasadasValidas ? `<strong>${pasadasCuello} pasadas</strong> ` : ''} (aprox. 2.5cm) en punto elástico (ej: 1/1, 2/2) para la terminación del cuello antes de dividir los puntos y empezar con los aumentos del ranglan.
     </div>`;
     
     resultadosDiv.innerHTML = html;
@@ -363,25 +363,7 @@ function calcularCmDeseados(p10, pa10, cmDeseados) {
     let html = `<h3>📏 Resultados para ${cmDeseados.toFixed(1)} cm Deseados</h3>`;
 
     html += `
-        <p class="resultado-principal">Puntos necesarios: **${puntosNecesarios} puntos**</p>
+        <p class="resultado-principal">Puntos necesarios: <strong>${puntosNecesarios} puntos</strong></p>
         <hr>
         <p>
-            Esto significa que para tejer **${cmDeseados.toFixed(1)} cm** de ancho,
-            necesitas montar **${puntosNecesarios} puntos**, basándote en tu muestra de **${p10} puntos en 10 cm**.
-        </p>
-    `;
-    
-    if (pasadasValidas) {
-        html += `
-            <p class="resultado-principal">Pasadas (hileras) necesarias:</p>
-            <p>
-                Para tejer **${cmDeseados.toFixed(1)} cm** de largo,
-                necesitas realizar **${pasadasNecesarias} pasadas**, basándote en tu muestra de **${pa10} pasadas en 10 cm**.
-            </p>
-        `;
-    } else {
-        html += `<p class="nota-medida">*(Para calcular las pasadas, introduce el dato en el campo de "Pasadas en 10cm")*</p>`;
-    }
-
-    resultadosDiv.innerHTML = html;
-}
+            Esto significa que para tejer **${cmDese
