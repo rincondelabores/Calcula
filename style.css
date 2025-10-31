@@ -1,70 +1,81 @@
 /*
- * --------------------------------
- * FOOTER Y REDES SOCIALES
- * --------------------------------
+ * =================================
+ * 1. ESTILOS GENERALES Y FUENTES
+ * =================================
  */
 
-footer {
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f7f3f0; /* Fondo crema suave */
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+    margin: 0;
+}
+
+h1, h2, h3 {
+    font-family: 'Dancing Script', cursive; /* Tipografía manuscrita para títulos */
+    color: #8B4513; /* Tono marrón cálido */
     text-align: center;
-    padding: 20px 0;
-    margin-top: 20px;
-    border-top: 2px solid #D2B48C;
-    background-color: #fffaf7; 
-    border-radius: 0 0 15px 15px; /* Bordes redondeados solo abajo */
-}
-
-.footer-hr {
-    margin-bottom: 0;
-}
-
-footer h3 {
-    font-size: 1.8em;
-    margin-bottom: 10px;
-}
-
-.direccion-tienda {
-    font-size: 1em;
-    margin-bottom: 15px;
-    color: #5C4033;
-}
-
-.direccion-tienda a {
-    color: #5C4033;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.direccion-tienda a:hover {
-    text-decoration: underline;
-    color: #8B4513;
-}
-
-.redes-sociales {
     margin-bottom: 20px;
+    font-weight: 700;
 }
 
-.redes-sociales a {
-    color: #A0522D; /* Tono tierra */
-    text-decoration: none;
+/* Título principal con más énfasis */
+h1 {
+    font-size: 2.8em;
+    padding-bottom: 10px;
+    /* Se elimina el border-bottom para darle más peso al <hr> */
+}
+
+/*
+ * =================================
+ * 2. CONTENEDORES PRINCIPALES Y FORMS
+ * =================================
+ */
+
+#calculadora-app {
+    max-width: 700px;
+    margin: 30px auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
     font-weight: bold;
-    margin: 0 8px;
-    padding: 8px 12px;
+    color: #5C4033;
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
     border: 1px solid #D2B48C;
-    border-radius: 5px;
-    display: inline-block;
-    transition: background-color 0.3s, color 0.3s;
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
 }
 
-.redes-sociales a:hover {
-    background-color: #A0522D;
+.input-group input:focus,
+.input-group select:focus {
+    border-color: #8B4513;
+    outline: none;
+    box-shadow: 0 0 5px rgba(139, 69, 19, 0.3);
+}
+
+/* Botón de calcular */
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #A0522D; /* Tono tierra */
     color: white;
-}
-
-.redes-sociales i {
-    margin-right: 5px;
-}
-
-.copyright {
-    font-size: 0.8em;
-    color: #999;
-}
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0
