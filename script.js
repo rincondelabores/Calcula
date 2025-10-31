@@ -1,9 +1,9 @@
 // =================================================================================
-// 1. DATOS DE TALLAS (SIN CAMBIOS)
+// 1. DATOS DE TALLAS
 // =================================================================================
 
 const DATOS_TALLAS = [
-    // Tallas de Bebé/Niño (Nuevas medidas: contornoPuno y contornoBrazoSup)
+    // Tallas de Bebé/Niño
     { etiqueta: 'Prematuro (00)', numTalla: '', pechoCirc: 35, largoTotal: 18, largoManga: 10, largoSisa: 7, ranglan: 9.0, escoteBajoSisa: 4, cuelloCirc: 28, contornoPuno: 11, contornoBrazoSup: 16 }, 
     { etiqueta: '0 (Recién Nacido)', numTalla: '', pechoCirc: 40, largoTotal: 20, largoManga: 12, largoSisa: 8, ranglan: 10.0, escoteBajoSisa: 6, cuelloCirc: 30, contornoPuno: 12, contornoBrazoSup: 18 }, 
     { etiqueta: '1-3 meses', numTalla: '', pechoCirc: 44, largoTotal: 24, largoManga: 15, largoSisa: 9, ranglan: 11.0, escoteBajoSisa: 7, cuelloCirc: 33, contornoPuno: 13, contornoBrazoSup: 20 }, 
@@ -15,7 +15,7 @@ const DATOS_TALLAS = [
     { etiqueta: '6 años', numTalla: '', pechoCirc: 72, largoTotal: 44, largoManga: 31, largoSisa: 17, ranglan: 21.5, escoteBajoSisa: 9, cuelloCirc: 48, contornoPuno: 17, contornoBrazoSup: 27 }, 
     { etiqueta: '8 años', numTalla: '', pechoCirc: 78, largoTotal: 48, largoManga: 33, largoSisa: 18, ranglan: 22.5, escoteBajoSisa: 10, cuelloCirc: 50, contornoPuno: 18, contornoBrazoSup: 28 }, 
     { etiqueta: '10 años', numTalla: '', pechoCirc: 84, largoTotal: 52, largoManga: 36, largoSisa: 19, ranglan: 24.0, escoteBajoSisa: 10, cuelloCirc: 52, contornoPuno: 19, contornoBrazoSup: 30 }, 
-    // Tallas de Adulto (Nuevas medidas: contornoPuno y contornoBrazoSup)
+    // Tallas de Adulto
     { etiqueta: 'XS', numTalla: '34-36', pechoCirc: 88, largoTotal: 58, largoManga: 40, largoSisa: 20, ranglan: 26.0, escoteBajoSisa: 14, cuelloCirc: 54, contornoPuno: 20, contornoBrazoSup: 32 }, 
     { etiqueta: 'S', numTalla: '38-40', pechoCirc: 94, largoTotal: 60, largoManga: 42, largoSisa: 21, ranglan: 27.5, escoteBajoSisa: 15, cuelloCirc: 55, contornoPuno: 21, contornoBrazoSup: 34 }, 
     { etiqueta: 'M', numTalla: '40-42', pechoCirc: 102, largoTotal: 62, largoManga: 44, largoSisa: 22, ranglan: 29.0, escoteBajoSisa: 16, cuelloCirc: 56, contornoPuno: 22, contornoBrazoSup: 36 }, 
@@ -25,18 +25,16 @@ const DATOS_TALLAS = [
 ];
 
 // =================================================================================
-// 2. FUNCIONES DE INICIALIZACIÓN Y EVENTOS (SIN CAMBIOS)
+// 2. FUNCIONES DE INICIALIZACIÓN Y EVENTOS
 // =================================================================================
-
-document.addEventListener('DOMContentLoaded', () => {
-    cargarTallas(DATOS_TALLAS);
-    document.getElementById('calculadora-form').addEventListener('submit', manejarCalculo);
-    document.getElementById('metodo').addEventListener('change', actualizarUI);
-    actualizarUI(); 
-});
 
 function cargarTallas(datosTallas) {
     const selectorTalla = document.getElementById('selector-talla');
+    // Aseguramos que el selector existe antes de intentar manipularlo
+    if (!selectorTalla) {
+        console.error("El elemento 'selector-talla' no fue encontrado en el DOM.");
+        return;
+    }
     selectorTalla.innerHTML = ''; 
 
     datosTallas.forEach(talla => {
@@ -52,6 +50,26 @@ function cargarTallas(datosTallas) {
         selectorTalla.appendChild(opcion);
     });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Cargamos las tallas tan pronto como el DOM esté listo
+    cargarTallas(DATOS_TALLAS); 
+    
+    // 2. Asignamos los event listeners
+    const form = document.getElementById('calculadora-form');
+    if (form) {
+        form.addEventListener('submit', manejarCalculo);
+    }
+    
+    const metodo = document.getElementById('metodo');
+    if (metodo) {
+        metodo.addEventListener('change', actualizarUI);
+    }
+
+    // 3. Inicializamos la interfaz
+    actualizarUI(); 
+});
+
 
 function actualizarUI() {
     const metodo = document.getElementById('metodo').value;
@@ -117,7 +135,7 @@ function manejarCalculo(event) {
 }
 
 // =================================================================================
-// 3. FUNCIONES DE CÁLCULO (LÓGICA ACTUALIZADA PARA RAGLAN)
+// 3. FUNCIONES DE CÁLCULO (INCLUYE CÁLCULO DE RANGLAN CORREGIDO)
 // =================================================================================
 
 function getTallaEtiqueta(datosTalla) {
@@ -316,4 +334,209 @@ function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
             <p>Largo total de la manga (desde puño a sisa): ${largoCM.toFixed(1)} cm</p>
             <hr>
             <p>
-                Deberás tejer ${largoCM.toFixed(1)} cm. Aumenta puntos de manera uniforme para pasar de ${puntosIniciales} puntos a ${puntosSisa}
+                Deberás tejer ${largoCM.toFixed(1)} cm. Aumenta puntos de manera uniforme para pasar de ${puntosIniciales} puntos a ${puntosSisa} puntos.
+            </p>
+            ${pasadasValidas ? `<p>Total de pasadas hasta la sisa: <strong>${pasadasLargoManga} pasadas</strong>.</p>` : ''}
+        `;
+        
+        // CALCULO DETALLADO DE MANGA BOTTOM-UP
+        html = agregarCalculoMangaBottomUp(html, pXcm, paXcm, pasadasValidas, datosTalla);
+    }
+    
+    resultadosDiv.innerHTML = html;
+}
+
+// ------------------- Función calcularDesdeEscote (Top-Down) -------------------
+function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
+    const resultadosDiv = document.getElementById('contenido-resultados');
+    const pXcm = p10 / 10;
+    
+    const pasadasValidas = pa10 > 0;
+    let paXcm = pasadasValidas ? pa10 / 10 : 0;
+
+    let anchoCuelloCM;
+    let holguraCuelloCM = 0;
+    const cuelloCircBase = datosTalla.cuelloCirc;
+    
+    anchoCuelloCM = cuelloCircBase * 0.8; 
+    
+    if (datosTalla.pechoCirc >= 80) { 
+        holguraCuelloCM = 7;
+        anchoCuelloCM += holguraCuelloCM; 
+    } 
+
+    const puntosMontadosTotal = Math.round(anchoCuelloCM * pXcm); 
+    
+    const puntosRanglanFijos = 8;
+    let puntosRestantes = puntosMontadosTotal - puntosRanglanFijos;
+
+    const unidadBase = puntosRestantes / 6; 
+    
+    let puntosEspalda, puntosMangas, puntosDelantero, puntosDelanteroTotal;
+
+    if (tipoPrenda === 'chaqueta') {
+        puntosMangas = Math.round(unidadBase * 1); 
+        puntosEspalda = Math.round(unidadBase * 2); 
+        puntosDelantero = Math.round(unidadBase * 1); 
+        puntosDelanteroTotal = puntosDelantero * 2;
+    } else {
+        puntosMangas = Math.round(unidadBase * 1); 
+        puntosEspalda = Math.round(unidadBase * 2); 
+        puntosDelantero = Math.round(unidadBase * 2); 
+        puntosDelanteroTotal = puntosDelantero;
+    }
+
+    const sumaActual = puntosEspalda + (puntosMangas * 2) + puntosDelanteroTotal + puntosRanglanFijos;
+    const diferencia = puntosMontadosTotal - sumaActual;
+    
+    // Ajustar los puntos restantes al más grande (espalda)
+    puntosEspalda += diferencia; 
+    
+    // ------------------------------------------------------------------
+    // CÁLCULO DINÁMICO DEL LARGO DEL RANGLAN
+    // ------------------------------------------------------------------
+    let largoRanglanCM;
+    let pasadasRanglan;
+    
+    // 1. Puntos Finales Requeridos en Sisa (para UNA manga)
+    const puntosFinalesManga = Math.round(datosTalla.contornoBrazoSup * pXcm);
+    
+    // 2. Puntos Totales a Aumentar en una manga
+    const puntosAAumentar = puntosFinalesManga - puntosMangas;
+    
+    if (puntosAAumentar < 0) {
+        // No hay aumentos, el raglan es corto o hay disminuciones. Usamos el estándar como referencia.
+        largoRanglanCM = datosTalla.ranglan; 
+        pasadasRanglan = pasadasValidas ? Math.round(largoRanglanCM * paXcm) : null;
+    }
+    
+    if (pasadasValidas && puntosAAumentar >= 0) {
+        // 3. Eventos de Aumento (Se aumenta 1 punto *en esa manga* por cada lado: 2 puntos totales en la manga por cada pasada de aumento)
+        const numeroDeEventosDeAumento = Math.ceil(puntosAAumentar / 2); 
+        
+        // 4. Total de Pasadas (Aumento cada 2 pasadas: pasada de aumento + pasada de descanso)
+        const totalPasadasRanglan = numeroDeEventosDeAumento * 2; 
+        
+        // 5. Largo en CM
+        largoRanglanCM = totalPasadasRanglan / paXcm;
+        pasadasRanglan = totalPasadasRanglan;
+
+        // Limitar la precisión del cálculo a dos decimales
+        largoRanglanCM = parseFloat(largoRanglanCM.toFixed(2));
+
+    } else if (!pasadasValidas) {
+        // Si no hay pasadas, usamos el valor estándar de patronaje para la referencia en CM.
+        largoRanglanCM = datosTalla.ranglan;
+        pasadasRanglan = null;
+    }
+    // ------------------------------------------------------------------
+
+    const largoMangaCM = datosTalla.largoManga;
+    const pasadasLargoManga = pasadasValidas ? Math.round(largoMangaCM * paXcm) : null;
+    const largoCuerpoCM = datosTalla.largoTotal - datosTalla.largoSisa;
+    const pasadasLargoCuerpo = pasadasValidas ? Math.round(largoCuerpoCM * paXcm) : null;
+    
+    const tallaEtiquetaCompleta = getTallaEtiqueta(datosTalla);
+    let html = `<h3>📐 Resultados Top-Down (Escote) para Talla ${tallaEtiquetaCompleta}</h3>`;
+
+    html += `
+        <p class="resultado-principal">Puntos a montar en el escote: <strong>${puntosMontadosTotal} puntos</strong></p>
+        <p class="nota-medida">*(Para un ancho aproximado de ${anchoCuelloCM.toFixed(1)} cm)*</p>
+        <hr>
+        
+        <h4>Distribución de Puntos Inicial:</h4>
+        <ul>
+            <li>Espalda: <strong>${puntosEspalda}</strong> puntos.</li>
+            <li>Mangas (cada una): <strong>${puntosMangas}</strong> puntos.</li>
+            <li>Ranglan (4 marcadores): 8 puntos fijos.</li>
+    `;
+    
+    if (tipoPrenda === 'chaqueta') {
+        html += `<li>Delantero (cada mitad): <strong>${puntosDelantero}</strong> puntos.</li>`;
+    } else {
+        html += `<li>Delantero (pieza única): <strong>${puntosDelantero}</strong> puntos.</li>`;
+    }
+
+    html += `
+        </ul>
+        <p class="nota-medida">*(Total de puntos iniciales: ${puntosMontadosTotal} puntos)*</p>
+    `;
+    
+    if (tipoPrenda === 'chaqueta') {
+        html += `<div class="nota-adicional">
+            **ATENCIÓN - CHAQEUETA:** Los ${puntosDelantero} puntos son para **UNA** de las mitades del delantero. 
+            Recuerda sumar los puntos adicionales (ej: 5 a 10 puntos) para la **tapeta o borde** a cada mitad.
+        </div>`;
+    }
+
+    html += `
+        <hr>
+        <h4>Instrucciones de Largo:</h4>
+        <p>
+            Largo del Ranglan (Diagonal Escote a Sisa): Teje hasta que la línea de ranglan mida **${largoRanglanCM.toFixed(1)} cm**.
+            ${pasadasValidas ? `<span class="nota-medida">(Esto requiere <strong>${pasadasRanglan} pasadas</strong> de aumento).</span>` : ''}
+            
+            <span class="nota-medida-importante">
+            * **IMPORTANTE:** Esta medida garantiza los puntos correctos en la sisa (${puntosFinalesManga} puntos por manga) con tu tensión y ritmo de aumento (cada 2 pasadas).
+            </span>
+        </p>
+        <p>
+            Largo de las Mangas (desde sisa a puño): ${largoMangaCM.toFixed(1)} cm.
+            ${pasadasValidas ? `<span class="nota-medida">(Aproximadamente <strong>${pasadasLargoManga} pasadas</strong>).</span>` : ''}
+        </p>
+    `;
+    
+    // CALCULO DETALLADO DE MANGA TOP-DOWN
+    html = agregarCalculoMangaTopDown(html, pXcm, paXcm, pasadasValidas, datosTalla);
+    
+    // Continuamos con el cuerpo
+    html += `
+        <p>
+            Largo del Cuerpo (desde sisa al bajo): ${largoCuerpoCM.toFixed(1)} cm.
+            ${pasadasValidas ? `<span class="nota-medida">(Aproximadamente <strong>${pasadasLargoCuerpo} pasadas</strong>).</span>` : ''}
+        </p>
+    `;
+
+    const pasadasCuello = pasadasValidas ? Math.round(2.5 * paXcm) : null;
+    html += `<div class="nota-adicional">
+        SUGERENCIA DE CUELLO: Sugerimos tejer al menos ${pasadasValidas ? `<strong>${pasadasCuello} pasadas</strong> ` : ''} (aprox. 2.5cm) en punto elástico (ej: 1/1, 2/2) para la terminación del cuello antes de dividir los puntos y empezar con los aumentos del ranglan.
+    </div>`;
+    
+    resultadosDiv.innerHTML = html;
+}
+
+function calcularCmDeseados(p10, pa10, cmDeseados) {
+    const resultadosDiv = document.getElementById('contenido-resultados');
+    const pXcm = p10 / 10;
+    
+    const pasadasValidas = pa10 > 0;
+    let paXcm = pasadasValidas ? pa10 / 10 : 0;
+    
+    const puntosNecesarios = Math.round(cmDeseados * pXcm);
+    const pasadasNecesarias = pasadasValidas ? Math.round(cmDeseados * paXcm) : null;
+    
+    let html = `<h3>📏 Resultados para ${cmDeseados.toFixed(1)} cm Deseados</h3>`;
+
+    html += `
+        <p class="resultado-principal">Puntos necesarios: <strong>${puntosNecesarios} puntos</strong></p>
+        <hr>
+        <p>
+            Esto significa que para tejer **${cmDeseados.toFixed(1)} cm** de ancho,
+            necesitas montar **${puntosNecesarios} puntos**, basándote en tu muestra de **${p10} puntos en 10 cm**.
+        </p>
+    `;
+    
+    if (pasadasValidas) {
+        html += `
+            <p class="resultado-principal">Pasadas (hileras) necesarias:</p>
+            <p>
+                Para tejer **${cmDeseados.toFixed(1)} cm** de largo,
+                necesitas realizar **${pasadasNecesarias} pasadas**, basándote en tu muestra de **${pa10} pasadas en 10 cm**.
+            </p>
+        `;
+    } else {
+        html += `<p class="nota-medida">*(Para calcular las pasadas, introduce el dato en el campo de "Pasadas en 10cm")*</p>`;
+    }
+
+    resultadosDiv.innerHTML = html;
+}
