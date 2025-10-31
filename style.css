@@ -1,0 +1,187 @@
+/* Importar fuentes: Pacifico para el título manuscrito, Poppins para el cuerpo */
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600&display=swap');
+
+:root {
+    --color-principal: #a67c52; /* Color tierra, lana, cálido */
+    --color-secundario: #f0e6d6; /* Beige claro, hilo */
+    --color-fondo: #ffffff;
+    --color-texto: #333333;
+    --color-acento: #e8a946; /* Toque vibrante */
+    --sombra-tarjeta: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--color-secundario);
+    color: var(--color-texto);
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.titulo-app {
+    font-family: 'Pacifico', cursive; /* Tipografía manuscrita */
+    color: var(--color-principal);
+    font-size: 2.5em;
+    font-weight: 400;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.contenedor-principal {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+@media (min-width: 768px) {
+    .contenedor-principal {
+        grid-template-columns: 1fr 1fr;
+    }
+    .resultados, .tarjeta-tienda {
+        grid-column: 1 / span 2;
+    }
+}
+
+.tarjeta {
+    background-color: var(--color-fondo);
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: var(--sombra-tarjeta);
+    border-top: 5px solid var(--color-acento);
+}
+
+.tarjeta h2 {
+    color: var(--color-principal);
+    font-weight: 600;
+    margin-top: 0;
+    border-bottom: 1px solid var(--color-secundario);
+    padding-bottom: 10px;
+}
+
+.grupo-input, .grupo-select {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+input[type="number"], select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1em;
+}
+
+button {
+    background-color: var(--color-acento);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    width: 100%;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #d19a41;
+}
+
+.nota-muestra {
+    background-color: #fff8e1; /* Fondo amarillo suave */
+    border-left: 4px solid var(--color-acento);
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+/* Estilos de Resultados */
+#contenido-resultados p {
+    margin: 10px 0;
+}
+
+.resultado-principal {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: var(--color-principal);
+    border-top: 2px dashed #eee;
+    padding-top: 10px;
+}
+
+.nota-adicional {
+    background-color: #fce4ec; /* Rosa suave */
+    border: 1px solid #f48fb1;
+    color: #c2185b;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+.mensaje-error {
+    background-color: #ffebee;
+    border: 1px solid #e57373;
+    color: #c62828;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: 600;
+}
+
+.oculto {
+    display: none !important;
+}
+
+/* Tarjeta de Presentación de la Tienda */
+.tarjeta-tienda {
+    background-color: var(--color-principal);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    font-size: 1.1em;
+    box-shadow: var(--sombra-tarjeta);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-tienda {
+    font-family: 'Pacifico', cursive;
+    font-size: 1.8em;
+    margin-bottom: 5px;
+    border-bottom: 2px solid white;
+    padding-bottom: 5px;
+}
+
+.datos-tienda p {
+    margin: 0;
+    font-weight: 300;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+}
+
+.email-contacto {
+    font-weight: 600;
+    color: var(--color-principal);
+}
