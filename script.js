@@ -319,26 +319,36 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
     const pXcm = p10 / 10;
     const paXcm = pa10 / 10;
     
-    // Ancho del cuello (aproximado 30% del contorno de pecho)
+    // 1. CÁLCULO DE PUNTOS TOTALES
+    // Ancho del cuello (aproximado 30% del contorno de pecho para un cuello estándar)
     const anchoCuelloCM = datosTalla.pechoCirc * 0.3; 
-    
-    // Puntos totales iniciales (Escote)
     const puntosEscoteTotal = Math.round(anchoCuelloCM * pXcm); 
     
-    // Puntos para Ranglan (4 esquinas * 2 puntos) - Ajuste general para ranglan
-    const puntosRanglan = 8;
-    
-    // Reparto de puntos básico: Delantero(1), Espalda(1), Mangas(1/2) - Se ajusta la distribución
+    // 2. REPARTO BASE
+    const puntosRanglan = 8; // 2 puntos por cada una de las 4 líneas de aumento
     let puntosRestantes = puntosEscoteTotal - puntosRanglan;
-    let puntosEspalda = Math.round(puntosRestantes * 0.35); // 35%
-    let puntosMangas = Math.round(puntosRestantes * 0.15 / 2); // 15% para cada manga
-    let puntosDelantero = puntosRestantes - puntosEspalda - (puntosMangas * 2); // El resto (35%)
+
+    // Reparto por cuartos, dando un poco más a la espalda. 
+    // Distribución típica: 2/6 Espalda, 1/6 cada Manga, 2/6 Delantero (o 1/6 cada delantero en chaqueta)
+    // Usaremos fracciones para mayor precisión: 2.5 partes Espalda, 2.5 partes Delantero, 0.5 partes cada Manga (Total 6 partes)
     
-    // Ajuste por chaqueta (la mitad del delantero irá en un lado y la otra mitad en el otro)
+    const puntosBasePorParte = puntosRestantes / 6;
+    
+    let puntosEspalda = Math.round(puntosBasePorParte * 2.5);
+    let puntosMangas = Math.round(puntosBasePorParte * 0.5); // Puntos de una sola manga
+    let puntosDelanteroTotal = puntosRestantes - puntosEspalda - (puntosMangas * 2);
+
+    // Ajustamos el delantero si es chaqueta
+    let puntosDelantero = puntosDelanteroTotal;
     if (tipoPrenda === 'chaqueta') {
-        puntosDelantero = Math.round(puntosDelantero / 2);
+        // En chaqueta, el delantero total se divide en dos mitades
+        puntosDelantero = Math.round(puntosDelanteroTotal / 2);
     }
-    
+
+    // Recalcular el total real después del redondeo para un check
+    const puntosMontados = puntosEspalda + (puntosMangas * 2) + (puntosDelantero * (tipoPrenda === 'chaqueta' ? 2 : 1)) + puntosRanglan;
+
+    // 3. CÁLCULO DE LARGOS EN PASADAS
     // Dimensiones de Ranglan
     const largoRanglanCM = datosTalla.ranglan; 
     const pasadasRanglan = Math.round(largoRanglanCM * paXcm);
@@ -352,22 +362,23 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
     let html = `<h3>📐 Resultados Top-Down (Escote) para Talla ${datosTalla.etiqueta} (${datosTalla.numTalla})</h3>`;
 
     html += `
-        <p class="resultado-principal">Puntos para montar en el escote (ancho ${anchoCuelloCM.toFixed(1)} cm): **${puntosEscoteTotal} puntos**</p>
+        <p class="resultado-principal">Puntos para montar en el escote (ancho ${anchoCuelloCM.toFixed(1)} cm): **${puntosMontados} puntos**</p>
         <hr>
         
         <h4>Reparto de Puntos Inicial (Antes de empezar a hacer aumentos):</h4>
         <ul>
             <li>**Espalda:** **${puntosEspalda}** puntos.</li>
             <li>**Mangas (c/u):** **${puntosMangas}** puntos.</li>
-            <li>**Ranglan (c/u):** **${puntosRanglan / 4}** puntos (para cada una de las 4 líneas de aumento).</li>
-            <li>**Delantero (total):** **${puntosDelantero * (tipoPrenda === 'chaqueta' ? 2 : 1)}** puntos.</li>
+            <li>**Delantero (total/cada lado):** **${puntosDelantero}** puntos (Si es chaqueta, **${puntosDelantero} puntos en cada lado**).</li>
+            <li>**Ranglan (c/u):** **2** puntos (para cada una de las 4 líneas de aumento).</li>
         </ul>
+        <p class="nota-medida">*(Nota: El total de puntos repartidos es ${puntosMontados} puntos)*</p>
     `;
     
     if (tipoPrenda === 'chaqueta') {
         html += `<div class="nota-adicional">
-            **REPARTO DELANTERO EN CHAQEUETA:** El Delantero se divide en dos: **${puntosDelantero} puntos** para el delantero derecho y **${puntosDelantero} puntos** para el delantero izquierdo.
-            Asegúrate de sumar los puntos de la **tapeta/borde** (ej: 5-10 puntos) a **cada uno** de los delanteros.
+            **ATENCIÓN - CHAQEUETA:** Los **${puntosDelantero}** puntos del delantero deben tejerse en dos mitades (lado derecho e izquierdo). 
+            Recuerda sumar los puntos adicionales (ej: 5 a 10 puntos) para la **tapeta/borde** a **cada mitad** del delantero.
         </div>`;
     }
 
