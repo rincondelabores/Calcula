@@ -1,5 +1,5 @@
 // =================================================================================
-// 1. DATOS DE TALLAS (FINAL: Incluye Contorno Puño y Contorno Brazo Superior)
+// 1. DATOS DE TALLAS (SIN CAMBIOS)
 // =================================================================================
 
 const DATOS_TALLAS = [
@@ -117,7 +117,7 @@ function manejarCalculo(event) {
 }
 
 // =================================================================================
-// 3. FUNCIONES DE CÁLCULO (LÓGICA ACTUALIZADA PARA MANGAS)
+// 3. FUNCIONES DE CÁLCULO (LÓGICA ACTUALIZADA PARA RAGLAN)
 // =================================================================================
 
 function getTallaEtiqueta(datosTalla) {
@@ -128,9 +128,6 @@ function getTallaEtiqueta(datosTalla) {
  * Agrega el cálculo detallado de la forma de manga (Bottom-Up) a los resultados.
  */
 function agregarCalculoMangaBottomUp(html, pXcm, paXcm, pasadasValidas, datosTalla) {
-    const pUno = datosTalla.contornoPuno / 2; // Media circunferencia del puño
-    const pSisa = datosTalla.contornoBrazoSup / 2; // Media circunferencia del brazo sup.
-
     const puntosIniciales = Math.round(datosTalla.contornoPuno * pXcm);
     const puntosFinales = Math.round(datosTalla.contornoBrazoSup * pXcm);
     
@@ -307,17 +304,16 @@ function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
     } else if (pieza === 'mangas') {
         largoCM = datosTalla.largoManga;
         
-        // Puntos y pasadas para la cabeza de manga (no el cuerpo)
         const puntosSisa = Math.round(datosTalla.contornoBrazoSup * pXcm);
         const puntosIniciales = Math.round(datosTalla.contornoPuno * pXcm); 
         const pasadasLargoManga = pasadasValidas ? Math.round(largoCM * paXcm) : null;
         
-        const anchoMangaSisaCM = datosTalla.contornoBrazoSup; // Usar contorno brazo superior
+        const anchoMangaSisaCM = datosTalla.contornoBrazoSup;
 
         html += `
             <p class="resultado-principal">Puntos a tejer para empezar (Puño, ancho aprox. ${datosTalla.contornoPuno.toFixed(1)} cm): <strong>${puntosIniciales} puntos</strong></p>
             <p>Puntos que deberá tener la manga al llegar a la sisa (Ancho Aprox. ${anchoMangaSisaCM.toFixed(1)} cm): <strong>${puntosSisa} puntos</strong></p>
-            <p>Largo total de la manga (desde sisa a puño): ${largoCM.toFixed(1)} cm</p>
+            <p>Largo total de la manga (desde puño a sisa): ${largoCM.toFixed(1)} cm</p>
             <hr>
             <p>
                 Deberás tejer ${largoCM.toFixed(1)} cm. Aumenta puntos de manera uniforme para pasar de ${puntosIniciales} puntos a ${puntosSisa} puntos.
@@ -325,7 +321,7 @@ function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
             ${pasadasValidas ? `<p>Total de pasadas hasta la sisa: <strong>${pasadasLargoManga} pasadas</strong>.</p>` : ''}
         `;
         
-        // ** NUEVO CALCULO DETALLADO DE MANGA BOTTOM-UP **
+        // CALCULO DETALLADO DE MANGA BOTTOM-UP
         html = agregarCalculoMangaBottomUp(html, pXcm, paXcm, pasadasValidas, datosTalla);
     }
     
@@ -375,10 +371,46 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
     const sumaActual = puntosEspalda + (puntosMangas * 2) + puntosDelanteroTotal + puntosRanglanFijos;
     const diferencia = puntosMontadosTotal - sumaActual;
     
-    puntosEspalda += diferencia;
+    // Ajustar los puntos restantes al más grande (espalda)
+    puntosEspalda += diferencia; 
     
-    const largoRanglanCM = datosTalla.ranglan; 
-    const pasadasRanglan = pasadasValidas ? Math.round(largoRanglanCM * paXcm) : null;
+    // ------------------------------------------------------------------
+    // NUEVO CÁLCULO DEL LARGO DEL RANGLAN BASADO EN PUNTOS Y TENSIÓN
+    // ------------------------------------------------------------------
+    let largoRanglanCM;
+    let pasadasRanglan;
+
+    if (pasadasValidas) {
+        // 1. Puntos Finales Requeridos en Sisa (para UNA manga)
+        const puntosFinalesManga = Math.round(datosTalla.contornoBrazoSup * pXcm);
+        
+        // 2. Puntos Totales a Aumentar en una manga
+        const puntosAAumentar = puntosFinalesManga - puntosMangas;
+
+        // 3. Eventos de Aumento (Se aumenta 1 punto *en esa manga* en cada pasada de aumento)
+        // Como se aumenta 1 punto a cada lado del raglan, pero el cálculo de puntosMangas
+        // ya incluye el total de puntos que deben aumentar, la fórmula es simplemente la siguiente:
+        const numeroDeEventosDeAumento = Math.ceil(puntosAAumentar / 2); // 2 puntos por vuelta (uno al inicio, uno al final de la manga)
+        
+        // 4. Total de Pasadas (Pasada de aumento + Pasada de descanso)
+        const totalPasadasRanglan = numeroDeEventosDeAumento * 2; 
+        
+        // 5. Largo en CM
+        largoRanglanCM = totalPasadasRanglan / paXcm;
+        pasadasRanglan = totalPasadasRanglan;
+
+        // Mostrar un mensaje si el largo calculado es muy diferente del estándar de patronaje
+        const diferenciaCM = Math.abs(largoRanglanCM - datosTalla.ranglan);
+        if (diferenciaCM > 2.5) {
+            console.warn("Advertencia: El largo de ranglan calculado difiere significativamente de la medida estándar.");
+        }
+    } else {
+        // Si no hay pasadas (pa10), volvemos al valor estándar de la tabla, y el cálculo de pasadas es nulo.
+        largoRanglanCM = datosTalla.ranglan;
+        pasadasRanglan = null;
+    }
+    // ------------------------------------------------------------------
+
     const largoMangaCM = datosTalla.largoManga;
     const pasadasLargoManga = pasadasValidas ? Math.round(largoMangaCM * paXcm) : null;
     const largoCuerpoCM = datosTalla.largoTotal - datosTalla.largoSisa;
@@ -422,7 +454,11 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
         <h4>Instrucciones de Largo:</h4>
         <p>
             Largo del Ranglan (Diagonal Escote a Sisa): Teje hasta que la línea de ranglan mida **${largoRanglanCM.toFixed(1)} cm**.
-            ${pasadasValidas ? `<span class="nota-medida">(Aproximadamente <strong>${pasadasRanglan} pasadas</strong> de aumento).</span>` : ''}
+            ${pasadasValidas ? `<span class="nota-medida">(Esto requiere <strong>${pasadasRanglan} pasadas</strong> de aumento).</span>` : ''}
+            
+            <span class="nota-medida-importante">
+            * **IMPORTANTE:** Esta medida garantiza los puntos correctos en la sisa (${puntosFinalesManga} puntos por manga) con tu tensión.
+            </span>
         </p>
         <p>
             Largo de las Mangas (desde sisa a puño): ${largoMangaCM.toFixed(1)} cm.
@@ -430,8 +466,7 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
         </p>
     `;
     
-    // ** NUEVO CALCULO DETALLADO DE MANGA TOP-DOWN **
-    // Agregamos el cálculo de la manga Top-Down aquí:
+    // CALCULO DETALLADO DE MANGA TOP-DOWN
     html = agregarCalculoMangaTopDown(html, pXcm, paXcm, pasadasValidas, datosTalla);
     
     // Continuamos con el cuerpo
