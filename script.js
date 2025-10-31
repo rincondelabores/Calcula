@@ -228,10 +228,9 @@ function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
     resultadosDiv.innerHTML = html;
 }
 
-
 /**
- * Realiza el cálculo para el método "Empezar por el Escote (Top-Down)".
- * (Corregido el formato y pasadas opcionales)
+ * Realiza el cálculo para el método "Empezar por el Escote (Top-Down - Ranglán)".
+ * (CORREGIDO: Fórmula de distribución de puntos más fiable: 3, 3, 1, 1).
  */
 function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
     const resultadosDiv = document.getElementById('contenido-resultados');
@@ -240,20 +239,52 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
     const pasadasValidas = pa10 > 0;
     let paXcm = pasadasValidas ? pa10 / 10 : 0;
 
-    // ... (Lógica de reparto de puntos y cálculo de montaje) ...
-    const anchoCuelloCM = datosTalla.pechoCirc * 0.3; 
-    const puntosEscoteTotal = Math.round(anchoCuelloCM * pXcm); 
-    const puntosRanglan = 8;
-    let puntosRestantes = puntosEscoteTotal - puntosRanglan;
-    const puntosBasePorParte = puntosRestantes / 6;
-    let puntosEspalda = Math.round(puntosBasePorParte * 2.5);
-    let puntosMangas = Math.round(puntosBasePorParte * 0.5);
-    let puntosDelanteroTotal = puntosRestantes - puntosEspalda - (puntosMangas * 2);
-    let puntosDelantero = tipoPrenda === 'chaqueta' ? Math.round(puntosDelanteroTotal / 2) : puntosDelanteroTotal;
-    const puntosMontados = puntosEspalda + (puntosMangas * 2) + (puntosDelantero * (tipoPrenda === 'chaqueta' ? 2 : 1)) + puntosRanglan;
-    // ... (Fin de la lógica de reparto) ...
+    // 1. CÁLCULO DE PUNTOS TOTALES DEL CUELLO
+    const anchoCuelloCM = datosTalla.pechoCirc * 0.3; // Ancho del cuello estándar (30% del pecho)
+    const puntosMontadosTotal = Math.round(anchoCuelloCM * pXcm); 
+    
+    const puntosRanglanFijos = 8;
+    let puntosRestantes = puntosMontadosTotal - puntosRanglanFijos;
 
-    // 3. CÁLCULO DE LARGOS EN PASADAS
+    // A. REPARTO ESTÁNDAR 3-3-1-1 (Espalda, Delantero, Manga, Manga)
+    // El total de unidades es 8.
+    const unidadBase = puntosRestantes / 8;
+    
+    // Asignación base (puede tener decimales)
+    let pEspaldaBase = unidadBase * 3;
+    let pDelanteroBase = unidadBase * 3;
+    let pMangasBase = unidadBase * 1;
+
+    // Redondeo y ajuste para que la suma sea exacta
+    let puntosEspalda = Math.round(pEspaldaBase);
+    let puntosMangas = Math.round(pMangasBase);
+    
+    // El delantero se ajusta para cerrar la suma, asegurando la precisión.
+    let puntosDelanteroTotal = puntosRestantes - puntosEspalda - (puntosMangas * 2);
+
+    // Ajuste para chaquetas: el delantero total se divide entre dos
+    let puntosDelantero = puntosDelanteroTotal;
+    if (tipoPrenda === 'chaqueta') {
+        puntosDelantero = Math.round(puntosDelanteroTotal / 2);
+        // Si es chaqueta, el delantero total *2 (dos piezas) + espalda + 2 mangas + 8 ranglan
+        // El total montado debe incluir las dos mitades del delantero.
+        const sumaCheck = puntosEspalda + (puntosMangas * 2) + (puntosDelantero * 2) + puntosRanglanFijos;
+        // Si la suma de los redondeos no coincide con el total inicial, ajustamos la espalda ligeramente.
+        if (sumaCheck !== puntosMontadosTotal) {
+             puntosEspalda += puntosMontadosTotal - sumaCheck; // Ajuste fino
+        }
+    } else {
+        // Jersey: Ajustar el delantero (una sola pieza)
+        const sumaCheck = puntosEspalda + (puntosMangas * 2) + puntosDelanteroTotal + puntosRanglanFijos;
+        if (sumaCheck !== puntosMontadosTotal) {
+             puntosEspalda += puntosMontadosTotal - sumaCheck; // Ajuste fino
+             puntosDelantero = puntosDelanteroTotal;
+        } else {
+            puntosDelantero = puntosDelanteroTotal;
+        }
+    }
+
+    // 3. CÁLCULO DE LARGOS EN PASADAS (Se mantiene igual)
     const largoRanglanCM = datosTalla.ranglan; 
     const pasadasRanglan = pasadasValidas ? Math.round(largoRanglanCM * paXcm) : null;
     const largoMangaCM = datosTalla.largoManga;
@@ -265,23 +296,23 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
     let html = `<h3>📐 Resultados Top-Down (Escote) para Talla ${tallaEtiquetaCompleta}</h3>`;
 
     html += `
-        <p class="resultado-principal">Puntos para montar en el escote (ancho ${anchoCuelloCM.toFixed(1)} cm): **${puntosMontados} puntos**</p>
+        <p class="resultado-principal">Puntos para montar en el escote (ancho ${anchoCuelloCM.toFixed(1)} cm): **${puntosMontadosTotal} puntos**</p>
         <hr>
         
         <h4>Reparto de Puntos Inicial (Antes de empezar a hacer aumentos):</h4>
         <ul>
             <li>Espalda: **${puntosEspalda}** puntos.</li>
             <li>Mangas (c/u): **${puntosMangas}** puntos.</li>
-            <li>Delantero (total/cada lado): **${puntosDelantero}** puntos (Si es chaqueta, ${puntosDelantero} puntos en cada lado).</li>
-            <li>Ranglan (c/u): 2 puntos (para cada una de las 4 líneas de aumento).</li>
+            <li>Delantero (${tipoPrenda === 'chaqueta' ? 'cada mitad' : 'pieza única'}): **${puntosDelantero}** puntos.</li>
+            <li>Ranglan (4 líneas): 2 puntos por línea (**8 puntos** en total).</li>
         </ul>
-        <p class="nota-medida">*(Nota: El total de puntos repartidos es ${puntosMontados} puntos)*</p>
+        <p class="nota-medida">*(El total de puntos iniciales es ${puntosMontadosTotal} puntos)*</p>
     `;
     
     if (tipoPrenda === 'chaqueta') {
         html += `<div class="nota-adicional">
-            **ATENCIÓN - CHAQEUETA:** Los ${puntosDelantero} puntos del delantero deben tejerse en dos mitades (lado derecho e izquierdo). 
-            Recuerda sumar los puntos adicionales (ej: 5 a 10 puntos) para la **tapeta/borde** a cada mitad del delantero.
+            **ATENCIÓN - CHAQEUETA:** Los ${puntosDelantero} puntos son para **UNA** de las mitades del delantero. 
+            Recuerda sumar los puntos adicionales (ej: 5 a 10 puntos) para la **tapeta/borde** a cada mitad.
         </div>`;
     }
 
@@ -302,54 +333,10 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
         </p>
     `;
     
-    // Sugerencia de cuello
     const pasadasCuello = pasadasValidas ? Math.round(2.5 * paXcm) : null;
-
     html += `<div class="nota-adicional">
         SUGERENCIA DE CUELLO: Sugerimos tejer al menos ${pasadasValidas ? `**${pasadasCuello} pasadas** ` : ''} (aprox. 2.5cm) en punto elástico (ej: 1/1, 2/2) para la terminación del cuello antes de dividir los puntos y empezar con los aumentos del ranglan.
     </div>`;
     
-    resultadosDiv.innerHTML = html;
-}
-
-/**
- * Realiza el cálculo para el método "Solo Regla de Tres (CM a Puntos)".
- * @param {number} p10 Puntos en 10cm.
- * @param {number} pa10 Pasadas en 10cm (Opcional).
- * @param {number} cmDeseados Centímetros que el usuario desea medir.
- */
-function calcularCmDeseados(p10, pa10, cmDeseados) {
-    const resultadosDiv = document.getElementById('contenido-resultados');
-    const pXcm = p10 / 10;
-    
-    const pasadasValidas = pa10 > 0;
-    let paXcm = pasadasValidas ? pa10 / 10 : 0;
-    
-    const puntosNecesarios = Math.round(cmDeseados * pXcm);
-    const pasadasNecesarias = pasadasValidas ? Math.round(cmDeseados * paXcm) : null;
-    
-    let html = `<h3>📏 Resultados para ${cmDeseados.toFixed(1)} cm Deseados</h3>`;
-
-    html += `
-        <p class="resultado-principal">Puntos necesarios: **${puntosNecesarios} puntos**</p>
-        <hr>
-        <p>
-            Esto significa que para tejer **${cmDeseados.toFixed(1)} cm** de ancho,
-            necesitas montar **${puntosNecesarios} puntos**, basándote en tu muestra de **${p10} puntos en 10 cm**.
-        </p>
-    `;
-    
-    if (pasadasValidas) {
-        html += `
-            <p class="resultado-principal">Pasadas (hileras) necesarias:</p>
-            <p>
-                Para tejer **${cmDeseados.toFixed(1)} cm** de largo,
-                necesitas realizar **${pasadasNecesarias} pasadas**, basándote en tu muestra de **${pa10} pasadas en 10 cm**.
-            </p>
-        `;
-    } else {
-        html += `<p class="nota-medida">*(Para calcular las pasadas, introduce el dato en el campo de "Pasadas en 10cm")*</p>`;
-    }
-
     resultadosDiv.innerHTML = html;
 }
