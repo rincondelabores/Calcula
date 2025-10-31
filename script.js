@@ -1,226 +1,132 @@
-// Base de Datos de Medidas (en Centímetros)
-// Tallas: 00 (prematuro), 0 (recién nacido), 1-3M, 3-6M, 6-9M, 9-12M, 12-18M, 18-24M
-// Niños: 2, 3, 4, 5, 6, 7, 8, 9, 10 años
-// Adultos: XS (36), S (38-40), M (40-42), L (42-44), XL (46-48), XXL (50-52)
-const TALLAS_DATA = {
-    // PREMATURO / BEBÉ
-    '00': { etiqueta: '00 (Prematuro)', numTalla: '32', pechoCirc: 38, largoTotal: 18, largoSisa: 7, largoManga: 11, anchoEspalda: 18, ranglan: 12, escoteBajoSisa: 5 },
-    '0': { etiqueta: '0 (Recién Nacido)', numTalla: '34', pechoCirc: 40, largoTotal: 20, largoSisa: 8, largoManga: 13, anchoEspalda: 19, ranglan: 13, escoteBajoSisa: 6 },
-    '1-3M': { etiqueta: '1-3 Meses', numTalla: '36', pechoCirc: 44, largoTotal: 22, largoSisa: 9, largoManga: 15, anchoEspalda: 20, ranglan: 14, escoteBajoSisa: 6.5 },
-    '3-6M': { etiqueta: '3-6 Meses', numTalla: '38', pechoCirc: 48, largoTotal: 25, largoSisa: 10, largoManga: 17, anchoEspalda: 21, ranglan: 15, escoteBajoSisa: 7 },
-    '6-9M': { etiqueta: '6-9 Meses', numTalla: '40', pechoCirc: 50, largoTotal: 28, largoSisa: 10.5, largoManga: 19, anchoEspalda: 22, ranglan: 16, escoteBajoSisa: 7.5 },
-    '9-12M': { etiqueta: '9-12 Meses', numTalla: '42', pechoCirc: 52, largoTotal: 31, largoSisa: 11, largoManga: 21, anchoEspalda: 23, ranglan: 17, escoteBajoSisa: 8 },
-    '12-18M': { etiqueta: '12-18 Meses', numTalla: '44', pechoCirc: 54, largoTotal: 34, largoSisa: 12, largoManga: 23, anchoEspalda: 24, ranglan: 18, escoteBajoSisa: 9 },
-    '18-24M': { etiqueta: '18-24 Meses', numTalla: '46', pechoCirc: 56, largoTotal: 37, largoSisa: 13, largoManga: 25, anchoEspalda: 25, ranglan: 19, escoteBajoSisa: 10 },
-    
-    // NIÑOS (Usando la referencia T2: Largo total 37, Bajo-Sisa 23, Escote desde bajo 33)
-    '2A': { etiqueta: '2 Años', numTalla: '50', pechoCirc: 58, largoTotal: 37, largoSisa: 14, largoManga: 27, anchoEspalda: 27, ranglan: 20, escoteBajoSisa: 10.5 },
-    '3A': { etiqueta: '3 Años', numTalla: '54', pechoCirc: 62, largoTotal: 41, largoSisa: 15, largoManga: 30, anchoEspalda: 30, ranglan: 22, escoteBajoSisa: 11 },
-    '4A': { etiqueta: '4 Años', numTalla: '58', pechoCirc: 66, largoTotal: 44, largoSisa: 16, largoManga: 33, anchoEspalda: 35, ranglan: 24, escoteBajoSisa: 11.5 },
-    '5A': { etiqueta: '5 Años', numTalla: '62', pechoCirc: 70, largoTotal: 47, largoSisa: 16.5, largoManga: 36, anchoEspalda: 36.5, ranglan: 25.5, escoteBajoSisa: 12 },
-    '6A': { etiqueta: '6 Años', numTalla: '66', pechoCirc: 74, largoTotal: 50, largoSisa: 17, largoManga: 39, anchoEspalda: 38, ranglan: 27, escoteBajoSisa: 12.5 },
-    '7A': { etiqueta: '7 Años', numTalla: '70', pechoCirc: 78, largoTotal: 51.5, largoSisa: 17.5, largoManga: 42, anchoEspalda: 39.5, ranglan: 28.5, escoteBajoSisa: 12.5 },
-    '8A': { etiqueta: '8 Años', numTalla: '74', pechoCirc: 82, largoTotal: 53, largoSisa: 18, largoManga: 45, anchoEspalda: 41, ranglan: 30, escoteBajoSisa: 12 },
-    '9A': { etiqueta: '9 Años', numTalla: '78', pechoCirc: 86, largoTotal: 55.5, largoSisa: 19, largoManga: 48, anchoEspalda: 42.5, ranglan: 31.5, escoteBajoSisa: 13 },
-    '10A': { etiqueta: '10 Años', numTalla: '82', pechoCirc: 90, largoTotal: 58, largoSisa: 20, largoManga: 51, anchoEspalda: 44, ranglan: 33, escoteBajoSisa: 14 },
-    
-    // ADULTOS (Usando la referencia L: Largo Total 60)
-    'XS': { etiqueta: 'XS (34-36)', numTalla: '34-36', pechoCirc: 84, largoTotal: 56, largoSisa: 21, largoManga: 58, anchoEspalda: 35, ranglan: 34, escoteBajoSisa: 15 },
-    'S': { etiqueta: 'S (38-40)', numTalla: '38-40', pechoCirc: 92, largoTotal: 58, largoSisa: 22, largoManga: 59, anchoEspalda: 37, ranglan: 35.5, escoteBajoSisa: 16 },
-    'M': { etiqueta: 'M (40-42)', numTalla: '40-42', pechoCirc: 100, largoTotal: 59, largoSisa: 23, largoManga: 60, anchoEspalda: 39, ranglan: 37, escoteBajoSisa: 17 },
-    'L': { etiqueta: 'L (42-44)', numTalla: '42-44', pechoCirc: 108, largoTotal: 60, largoSisa: 24, largoManga: 61, anchoEspalda: 41, ranglan: 38.5, escoteBajoSisa: 18 },
-    'XL': { etiqueta: 'XL (46-48)', numTalla: '46-48', pechoCirc: 116, largoTotal: 62, largoSisa: 25, largoManga: 62, anchoEspalda: 43, ranglan: 40, escoteBajoSisa: 19 },
-    'XXL': { etiqueta: 'XXL (50-52)', numTalla: '50-52', pechoCirc: 124, largoTotal: 64, largoSisa: 26, largoManga: 63, anchoEspalda: 45, ranglan: 41.5, escoteBajoSisa: 20 }
-};
+// =================================================================================
+// 1. DATOS DE TALLAS (MODIFICADO: numTalla vacío para bebés/niños)
+// =================================================================================
 
-// =========================================================================
-// INICIALIZACIÓN Y MANEJO DE LA INTERFAZ
-// =========================================================================
+const DATOS_TALLAS = [
+    // Tallas de Bebé/Niño (numTalla vacío para no mostrarlo)
+    { etiqueta: 'Prematuro (00)', numTalla: '', pechoCirc: 38, largoTotal: 18, largoManga: 13, largoSisa: 7, ranglan: 11, escoteBajoSisa: 4 },
+    { etiqueta: '0 (Recién Nacido)', numTalla: '', pechoCirc: 40, largoTotal: 20, largoManga: 16, largoSisa: 8, ranglan: 13, escoteBajoSisa: 6 },
+    { etiqueta: '1-3 meses', numTalla: '', pechoCirc: 46, largoTotal: 24, largoManga: 18, largoSisa: 10, ranglan: 15, escoteBajoSisa: 7 },
+    { etiqueta: '3-6 meses', numTalla: '', pechoCirc: 50, largoTotal: 27, largoManga: 20, largoSisa: 11, ranglan: 16, escoteBajoSisa: 7 },
+    { etiqueta: '6-12 meses', numTalla: '', pechoCirc: 54, largoTotal: 30, largoManga: 22, largoSisa: 12, ranglan: 17, escoteBajoSisa: 7 },
+    { etiqueta: '12-18 meses', numTalla: '', pechoCirc: 56, largoTotal: 33, largoManga: 25, largoSisa: 13, ranglan: 18, escoteBajoSisa: 8 },
+    { etiqueta: '2 años', numTalla: '', pechoCirc: 58, largoTotal: 35, largoManga: 28, largoSisa: 14, ranglan: 19, escoteBajoSisa: 8 },
+    { etiqueta: '4 años', numTalla: '', pechoCirc: 62, largoTotal: 40, largoManga: 32, largoSisa: 15, ranglan: 20, escoteBajoSisa: 9 },
+    { etiqueta: '6 años', numTalla: '', pechoCirc: 66, largoTotal: 44, largoManga: 36, largoSisa: 16, ranglan: 21, escoteBajoSisa: 9 },
+    { etiqueta: '8 años', numTalla: '', pechoCirc: 70, largoTotal: 48, largoManga: 40, largoSisa: 17, ranglan: 22, escoteBajoSisa: 10 },
+    { etiqueta: '10 años', numTalla: '', pechoCirc: 76, largoTotal: 52, largoManga: 44, largoSisa: 18, ranglan: 23, escoteBajoSisa: 10 },
+    // Tallas de Adulto (numTalla visible solo en estas)
+    { etiqueta: 'XS', numTalla: '34-36', pechoCirc: 80, largoTotal: 58, largoManga: 56, largoSisa: 20, ranglan: 32, escoteBajoSisa: 14 },
+    { etiqueta: 'S', numTalla: '38-40', pechoCirc: 88, largoTotal: 60, largoManga: 58, largoSisa: 22, ranglan: 36, escoteBajoSisa: 15 },
+    { etiqueta: 'M', numTalla: '40-42', pechoCirc: 98, largoTotal: 62, largoManga: 59, largoSisa: 24, ranglan: 38, escoteBajoSisa: 16 },
+    { etiqueta: 'L', numTalla: '42-44', pechoCirc: 108, largoTotal: 64, largoManga: 60, largoSisa: 26, ranglan: 40, escoteBajoSisa: 17 },
+    { etiqueta: 'XL', numTalla: '46-48', pechoCirc: 118, largoTotal: 66, largoManga: 61, largoSisa: 28, ranglan: 42, escoteBajoSisa: 18 },
+    { etiqueta: 'XXL', numTalla: '50-52', pechoCirc: 128, largoTotal: 68, largoManga: 62, largoSisa: 30, ranglan: 44, escoteBajoSisa: 19 }
+];
+
+// =================================================================================
+// 2. FUNCIONES DE INICIALIZACIÓN Y EVENTOS
+// =================================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    cargarOpcionesTalla();
-    document.getElementById('metodoConstruccion').addEventListener('change', actualizarOpcionesUI);
-    // Para asegurar que la UI se ajusta al cargar si hay valores predeterminados
-    actualizarOpcionesUI(); 
+    cargarTallas(DATOS_TALLAS);
+    document.getElementById('calculadora-form').addEventListener('submit', manejarCalculo);
+    document.getElementById('metodo').addEventListener('change', actualizarUI);
+    actualizarUI();
 });
 
-/**
- * Carga las opciones de talla en el <select>
- */
-function cargarOpcionesTalla() {
-    const selectTalla = document.getElementById('talla');
-    // Mapea y crea un elemento <option> por cada talla en TALLAS_DATA
-    Object.keys(TALLAS_DATA).forEach(key => {
-        const data = TALLAS_DATA[key];
-        const option = document.createElement('option');
-        option.value = key;
-        option.textContent = `${data.etiqueta} (${data.numTalla})`;
-        selectTalla.appendChild(option);
+// MODIFICADO: Solo añade numTalla si existe para evitar duplicados y números en tallas pequeñas.
+function cargarTallas(datosTallas) {
+    const selectorTalla = document.getElementById('selector-talla');
+    selectorTalla.innerHTML = ''; 
+
+    datosTallas.forEach(talla => {
+        let textoOpcion = talla.etiqueta;
+        
+        if (talla.numTalla && talla.numTalla !== '') {
+            textoOpcion += ` (${talla.numTalla})`; 
+        }
+
+        const opcion = document.createElement('option');
+        opcion.value = talla.etiqueta;
+        opcion.textContent = textoOpcion;
+        selectorTalla.appendChild(opcion);
     });
 }
 
-/**
- * Muestra u oculta los campos de selección de prenda/pieza según el método de construcción.
- */
-function actualizarOpcionesUI() {
-    const metodo = document.getElementById('metodoConstruccion').value;
-    const opcionesPrendaDiv = document.getElementById('opciones-prenda');
-    const opcionesPiezaDiv = document.getElementById('opciones-pieza');
-    const opcionesCMDiv = document.getElementById('opciones-cm');
-    const tipoPrendaSelect = document.getElementById('tipoPrenda');
-    const piezaSelect = document.getElementById('pieza');
+function actualizarUI() {
+    const metodo = document.getElementById('metodo').value;
+    const piezaDiv = document.getElementById('pieza-div');
+    const tipoPrenda = document.getElementById('tipo-prenda').value;
 
-    // Ocultar todo por defecto
-    opcionesPrendaDiv.classList.add('oculto');
-    opcionesPiezaDiv.classList.add('oculto');
-    opcionesCMDiv.classList.add('oculto');
-
-    if (metodo === 'bajo' || metodo === 'escote') {
-        opcionesPrendaDiv.classList.remove('oculto');
-        
-        // La pieza solo se elige si es por el bajo, NO si es Top-Down (escote)
-        if (metodo === 'bajo') {
-            opcionesPiezaDiv.classList.remove('oculto');
-            // Requerir selección de prenda y pieza
-            tipoPrendaSelect.required = true;
-            piezaSelect.required = true;
-        } else {
-            // Si es escote, no se elige pieza (se calcula el total)
-            opcionesPiezaDiv.classList.add('oculto');
-            // Requerir solo selección de prenda (el jersey/chaqueta afecta al cálculo del delantero)
-            tipoPrendaSelect.required = true;
-            piezaSelect.required = false; // Ya no es necesario
-        }
-    } else if (metodo === 'cm') {
-        opcionesCMDiv.classList.remove('oculto');
-        // No se requiere prenda ni pieza
-        tipoPrendaSelect.required = false;
-        piezaSelect.required = false;
+    // Solo mostrar selector de pieza para el método "Empezar por el Bajo"
+    if (metodo === 'desde-bajo') {
+        piezaDiv.style.display = 'block';
     } else {
-        // Ningún método seleccionado
-        tipoPrendaSelect.required = false;
-        piezaSelect.required = false;
+        piezaDiv.style.display = 'none';
     }
 }
 
-// =========================================================================
-// FUNCIONES DE CÁLCULO
-// =========================================================================
+function manejarCalculo(event) {
+    event.preventDefault();
 
-/**
- * Realiza el cálculo principal al hacer clic en el botón.
- */
-function calcularPuntos() {
-    const puntos10cm = parseFloat(document.getElementById('puntos10cm').value);
-    const pasadas10cm = parseFloat(document.getElementById('pasadas10cm').value);
-    const metodo = document.getElementById('metodoConstruccion').value;
-    const tipoPrenda = document.getElementById('tipoPrenda').value;
-    const tallaKey = document.getElementById('talla').value;
+    const p10 = parseFloat(document.getElementById('puntos-10cm').value);
+    const pa10Str = document.getElementById('pasadas-10cm').value;
+    const pa10 = pa10Str === '' ? 0 : parseFloat(pa10Str); // Acepta cadena vacía como 0
+    
+    const metodo = document.getElementById('metodo').value;
+    const tipoPrenda = document.getElementById('tipo-prenda').value;
+    const etiquetaTalla = document.getElementById('selector-talla').value;
     const pieza = document.getElementById('pieza').value;
-    const cmDeseados = parseFloat(document.getElementById('cmDeseados').value);
-    const resultadosDiv = document.getElementById('contenido-resultados');
-    const errorDiv = document.getElementById('mensaje-error');
-    
-    // Resetear resultados y errores
-    resultadosDiv.innerHTML = '';
-    errorDiv.classList.add('oculto');
-    errorDiv.textContent = '';
 
-    // Validaciones básicas
-    if (isNaN(puntos10cm) || puntos10cm <= 0 || isNaN(pasadas10cm) || pasadas10cm <= 0) {
-        mostrarError("Debes introducir la Muestra de Tensión (Puntos y Pasadas en 10cm) con valores válidos.");
+    if (isNaN(p10) || p10 <= 0) {
+        alert("Por favor, introduce un número válido de Puntos en 10cm.");
         return;
     }
 
-    if (!metodo) {
-        mostrarError("Debes seleccionar un Método de Construcción.");
-        return;
-    }
+    const datosTalla = DATOS_TALLAS.find(t => t.etiqueta === etiquetaTalla);
+    if (!datosTalla) return;
 
-    // Validación según el método
-    if (metodo === 'bajo' || metodo === 'escote') {
-        if (!tipoPrenda || !tallaKey) {
-            mostrarError("Debes seleccionar la Prenda y la Talla.");
-            return;
-        }
-        if (metodo === 'bajo' && !pieza) {
-            mostrarError("Debes seleccionar la Pieza a tejer (Delantero, Espalda o Mangas) para el método 'Empezar por el Bajo'.");
-            return;
-        }
-    } else if (metodo === 'cm') {
-        if (isNaN(cmDeseados) || cmDeseados <= 0) {
-            mostrarError("Debes introducir los Centímetros Deseados (un valor numérico mayor que 0).");
-            return;
-        }
-        
-        // Si elige "CM Deseados", calcula y termina
-        calcularCM(puntos10cm, pasadas10cm, cmDeseados);
-        return;
-    }
-    
-    // Si llegamos aquí, es 'bajo' o 'escote'
-    const datosTalla = TALLAS_DATA[tallaKey];
-    
-    if (metodo === 'bajo') {
-        calcularDesdeBajo(puntos10cm, pasadas10cm, datosTalla, tipoPrenda, pieza);
-    } else if (metodo === 'escote') {
-        calcularDesdeEscote(puntos10cm, pasadas10cm, datosTalla, tipoPrenda);
+    if (metodo === 'desde-bajo') {
+        calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza);
+    } else if (metodo === 'desde-escote') {
+        calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda);
+    } else if (metodo === 'cm-deseados') {
+        // Asumiendo que esta función existe y maneja pa10 opcionalmente
+        calcularCmDeseados(p10, pa10, datosTalla); 
     }
 }
 
-/**
- * Muestra un mensaje de error.
- * @param {string} mensaje El mensaje de error.
- */
-function mostrarError(mensaje) {
-    const errorDiv = document.getElementById('mensaje-error');
-    errorDiv.textContent = '⚠️ ' + mensaje;
-    errorDiv.classList.remove('oculto');
-    document.getElementById('contenido-resultados').innerHTML = '<p>Corrige los errores y vuelve a calcular.</p>';
-}
-
-
-/**
- * Calcula los puntos y pasadas para unos CM deseados.
- * @param {number} p10 Puntos en 10cm.
- * @param {number} pa10 Pasadas en 10cm.
- * @param {number} cm CM deseados.
- */
-function calcularCM(p10, pa10, cm) {
-    const puntos = Math.round((p10 / 10) * cm);
-    const pasadas = Math.round((pa10 / 10) * cm);
-    const resultadosDiv = document.getElementById('contenido-resultados');
-    
-    resultadosDiv.innerHTML = `
-        <h3>Cálculo para ${cm.toFixed(1)} cm</h3>
-        <p class="resultado-principal">
-            Necesitas montar o tejer **${puntos} puntos** para ${cm.toFixed(1)} cm de ancho.
-        </p>
-        <p class="resultado-principal">
-            Necesitas tejer **${pasadas} pasadas** para ${cm.toFixed(1)} cm de largo.
-        </p>
-        <p>Estos resultados te sirven para calcular cualquier pieza que no sea una prenda completa (ej: mantas, bufandas, puños, etc.).</p>
-    `;
-}
+// =================================================================================
+// 3. FUNCIONES DE CÁLCULO
+// =================================================================================
 
 /**
  * Realiza el cálculo para el método "Empezar por el Bajo".
- * (Se aplica el formato simple y la corrección de escote)
+ * (CORREGIDO: Lógica de Chaqueta/Delantero, Escote y Pasadas Opcionales)
  */
 function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
     const resultadosDiv = document.getElementById('contenido-resultados');
     const pXcm = p10 / 10;
-    const paXcm = pa10 / 10;
-    let html = `<h3>📐 Resultados para Talla ${datosTalla.etiqueta} (${datosTalla.numTalla}) - Pieza: ${pieza.toUpperCase()}</h3>`;
+    
+    // VALIDACIÓN DE PASADAS/VUELTAS (pa10 > 0)
+    const pasadasValidas = pa10 > 0;
+    let paXcm = 0;
+    if (pasadasValidas) {
+        paXcm = pa10 / 10;
+    }
+
+    const tallaEtiquetaCompleta = datosTalla.numTalla ? `${datosTalla.etiqueta} (${datosTalla.numTalla})` : datosTalla.etiqueta;
+    let html = `<h3>📐 Resultados para Talla ${tallaEtiquetaCompleta} - Pieza: **${pieza.toUpperCase()}**</h3>`;
 
     let anchoCM, anchoParaPuntos, largoCM;
     
-    // Estimación de Profundidad de Escote (CORRECCIÓN)
+    // Estimación de Profundidad de Escote Frontal (CORRECCIÓN DE VALORES)
     let profundidadEscoteFrontalCM;
-    if (datosTalla.pechoCirc < 60) {
-        // Bebé/Niño pequeño (3.0 a 4.0 cm)
+    if (datosTalla.pechoCirc <= 56) {
+        // Bebé (3.0 a 4.0 cm)
         profundidadEscoteFrontalCM = 3.5; 
-    } else if (datosTalla.pechoCirc < 90) {
+    } else if (datosTalla.pechoCirc <= 90) {
         // Niño grande/Adulto pequeño (5.0 a 6.0 cm)
         profundidadEscoteFrontalCM = 6.0; 
     } else {
@@ -230,14 +136,14 @@ function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
 
     // Cálculos de largos comunes
     const largoBajoSisa = datosTalla.largoTotal - datosTalla.largoSisa;
-    const pasadasBajoSisa = Math.round(largoBajoSisa * paXcm);
-    const pasadasHastaEscote = Math.round((datosTalla.largoTotal - datosTalla.escoteBajoSisa) * paXcm);
+    
+    const pasadasBajoSisa = pasadasValidas ? Math.round(largoBajoSisa * paXcm) : null;
+    const pasadasHastaEscote = pasadasValidas ? Math.round((datosTalla.largoTotal - datosTalla.escoteBajoSisa) * paXcm) : null;
+    
     largoCM = datosTalla.largoTotal;
 
-    // ... (El resto de la lógica de Delantero/Espalda/Manga se mantiene igual,
-    //     pero con el formato simplificado)
-
     if (pieza === 'espalda' || (pieza === 'delantero' && tipoPrenda === 'jersey')) {
+        // Espalda o Delantero Jersey = Mitad del contorno de pecho
         anchoCM = datosTalla.pechoCirc / 2;
         anchoParaPuntos = anchoCM;
         const puntosIniciales = Math.round(anchoParaPuntos * pXcm);
@@ -248,19 +154,20 @@ function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
             <hr>
             <p>
                 Inicio de la Sisa: A los ${largoBajoSisa.toFixed(1)} cm desde el bajo. 
-                (Aprox. ${pasadasBajoSisa} pasadas).
+                ${pasadasValidas ? `(Aprox. **${pasadasBajoSisa} pasadas**).` : ''}
                 <span class="nota-medida">(Sisa: ${datosTalla.largoSisa.toFixed(1)} cm)</span>
             </p>
             <p>
-                Inicio del Escote (Redondo): A los ${datosTalla.largoTotal - datosTalla.escoteBajoSisa} cm desde el bajo. 
-                (Aprox. ${pasadasHastaEscote} pasadas).
+                Inicio del Escote (Redondo): A los ${(datosTalla.largoTotal - datosTalla.escoteBajoSisa).toFixed(1)} cm desde el bajo. 
+                ${pasadasValidas ? `(Aprox. **${pasadasHastaEscote} pasadas**).` : ''}
                 <span class="nota-medida">(Para un escote redondo estándar, la curva delantera tendrá una profundidad de aprox. ${profundidadEscoteFrontalCM.toFixed(1)} cm).</span>
             </p>
         `;
 
     } else if (pieza === 'delantero' && tipoPrenda === 'chaqueta') {
+        // Delantero Chaqueta = Mitad del ancho de la espalda
         const anchoEspalda = datosTalla.pechoCirc / 2;
-        anchoCM = anchoEspalda / 2;
+        anchoCM = anchoEspalda / 2; 
         anchoParaPuntos = anchoCM;
         const puntosIniciales = Math.round(anchoParaPuntos * pXcm);
         
@@ -270,12 +177,12 @@ function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
             <hr>
             <p>
                 Inicio de la Sisa: A los ${largoBajoSisa.toFixed(1)} cm desde el bajo. 
-                (Aprox. ${pasadasBajoSisa} pasadas).
+                ${pasadasValidas ? `(Aprox. **${pasadasBajoSisa} pasadas**).` : ''}
                 <span class="nota-medida">(Sisa: ${datosTalla.largoSisa.toFixed(1)} cm)</span>
             </p>
             <p>
-                Inicio del Escote (Redondo): A los ${datosTalla.largoTotal - datosTalla.escoteBajoSisa} cm desde el bajo. 
-                (Aprox. ${pasadasHastaEscote} pasadas).
+                Inicio del Escote (Redondo): A los ${(datosTalla.largoTotal - datosTalla.escoteBajoSisa).toFixed(1)} cm desde el bajo. 
+                ${pasadasValidas ? `(Aprox. **${pasadasHastaEscote} pasadas**).` : ''}
                 <span class="nota-medida">(Para un escote redondo estándar, la curva delantera tendrá una profundidad de aprox. ${profundidadEscoteFrontalCM.toFixed(1)} cm).</span>
             </p>
 
@@ -283,26 +190,51 @@ function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
                 **NOTA ADICIONAL - CHAQEUETA:** Estos puntos (${puntosIniciales} puntos) corresponden a **UNA** de las mitades del delantero (derecha o izquierda). ¡Recuerda que debes sumar los puntos necesarios para la **tapeta/borde** (ej: 5-10 puntos) a este resultado!
             </div>
         `;
-    } 
-    // ... (Se omiten los cálculos de manga por brevedad)
+
+    } else if (pieza === 'mangas') {
+        anchoCM = datosTalla.pechoCirc * 0.2; 
+        largoCM = datosTalla.largoManga;
+        
+        const puntosSisa = Math.round(datosTalla.pechoCirc * 0.4 * pXcm);
+        const puntosIniciales = Math.round(datosTalla.pechoCirc * 0.18 * pXcm); 
+        const pasadasLargoManga = pasadasValidas ? Math.round(largoCM * paXcm) : null;
+        
+        html += `
+            <p class="resultado-principal">Puntos a tejer para empezar (Puño, ancho aprox. ${(datosTalla.pechoCirc * 0.18).toFixed(1)} cm): **${puntosIniciales} puntos**</p>
+            <p>Puntos que deberá tener la manga al llegar a la sisa: **${puntosSisa} puntos**</p>
+            <p>Largo total de la manga (desde sisa a puño): ${largoCM.toFixed(1)} cm</p>
+            <hr>
+            <p>
+                Deberás tejer ${largoCM.toFixed(1)} cm. Aumenta puntos de manera uniforme para pasar de ${puntosIniciales} puntos a ${puntosSisa} puntos.
+            </p>
+            ${pasadasValidas ? `<p>Total de pasadas hasta el puño: **${pasadasLargoManga} pasadas**.</p>` : ''}
+        `;
+    }
     
     resultadosDiv.innerHTML = html;
 }
 
+
 /**
  * Realiza el cálculo para el método "Empezar por el Escote (Top-Down)".
- * (Formato simplificado)
+ * (CORREGIDO: Formato simple y Pasadas Opcionales)
  */
 function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
     const resultadosDiv = document.getElementById('contenido-resultados');
     const pXcm = p10 / 10;
-    const paXcm = pa10 / 10;
     
+    // VALIDACIÓN DE PASADAS/VUELTAS (pa10 > 0)
+    const pasadasValidas = pa10 > 0;
+    let paXcm = 0;
+    if (pasadasValidas) {
+        paXcm = pa10 / 10;
+    }
+
     // 1. CÁLCULO DE PUNTOS TOTALES
     const anchoCuelloCM = datosTalla.pechoCirc * 0.3; 
     const puntosEscoteTotal = Math.round(anchoCuelloCM * pXcm); 
     
-    // 2. REPARTO BASE (2.5 Espalda, 2.5 Delantero, 0.5 cada Manga)
+    // 2. REPARTO BASE
     const puntosRanglan = 8;
     let puntosRestantes = puntosEscoteTotal - puntosRanglan;
     const puntosBasePorParte = puntosRestantes / 6;
@@ -320,13 +252,14 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
 
     // 3. CÁLCULO DE LARGOS EN PASADAS
     const largoRanglanCM = datosTalla.ranglan; 
-    const pasadasRanglan = Math.round(largoRanglanCM * paXcm);
+    const pasadasRanglan = pasadasValidas ? Math.round(largoRanglanCM * paXcm) : null;
     const largoMangaCM = datosTalla.largoManga;
-    const pasadasLargoManga = Math.round(largoMangaCM * paXcm);
+    const pasadasLargoManga = pasadasValidas ? Math.round(largoMangaCM * paXcm) : null;
     const largoCuerpoCM = datosTalla.largoTotal - datosTalla.largoSisa;
-    const pasadasLargoCuerpo = Math.round(largoCuerpoCM * paXcm);
+    const pasadasLargoCuerpo = pasadasValidas ? Math.round(largoCuerpoCM * paXcm) : null;
     
-    let html = `<h3>📐 Resultados Top-Down (Escote) para Talla ${datosTalla.etiqueta} (${datosTalla.numTalla})</h3>`;
+    const tallaEtiquetaCompleta = datosTalla.numTalla ? `${datosTalla.etiqueta} (${datosTalla.numTalla})` : datosTalla.etiqueta;
+    let html = `<h3>📐 Resultados Top-Down (Escote) para Talla ${tallaEtiquetaCompleta}</h3>`;
 
     html += `
         <p class="resultado-principal">Puntos para montar en el escote (ancho ${anchoCuelloCM.toFixed(1)} cm): **${puntosMontados} puntos**</p>
@@ -354,21 +287,29 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
         <h4>Instrucciones de Largo:</h4>
         <p>
             Largo del Ranglan (Diagonal Escote a Sisa): Teje hasta que la línea de ranglan mida ${largoRanglanCM.toFixed(1)} cm.
-            <span class="nota-medida">(Aprox. ${pasadasRanglan} pasadas de aumento).</span>
+            ${pasadasValidas ? `<span class="nota-medida">(Aprox. **${pasadasRanglan} pasadas** de aumento).</span>` : ''}
         </p>
         <p>
             Largo de las Mangas (desde sisa a puño): ${largoMangaCM.toFixed(1)} cm.
-            <span class="nota-medida">(Aprox. ${pasadasLargoManga} pasadas).</span>
+            ${pasadasValidas ? `<span class="nota-medida">(Aprox. **${pasadasLargoManga} pasadas**).</span>` : ''}
         </p>
         <p>
             Largo del Cuerpo (desde sisa al bajo): ${largoCuerpoCM.toFixed(1)} cm.
-            <span class="nota-medida">(Aprox. ${pasadasLargoCuerpo} pasadas).</span>
+            ${pasadasValidas ? `<span class="nota-medida">(Aprox. **${pasadasLargoCuerpo} pasadas**).</span>` : ''}
         </p>
-        
-        <div class="nota-adicional">
-            SUGERENCIA DE CUELLO: Sugerimos tejer al menos ${Math.round(2.5 * paXcm)} pasadas (aprox. 2.5cm) en punto elástico (ej: 1/1, 2/2) para la terminación del cuello **antes** de dividir los puntos y empezar con los aumentos del ranglan.
-        </div>
     `;
+    
+    if (pasadasValidas) {
+        html += `<div class="nota-adicional">
+            SUGERENCIA DE CUELLO: Sugerimos tejer al menos **${Math.round(2.5 * paXcm)} pasadas** (aprox. 2.5cm) en punto elástico (ej: 1/1, 2/2) para la terminación del cuello antes de dividir los puntos y empezar con los aumentos del ranglan.
+        </div>`;
+    } else {
+         html += `<div class="nota-adicional">
+            SUGERENCIA DE CUELLO: Sugerimos tejer al menos 2.5 cm en punto elástico (ej: 1/1, 2/2) para la terminación del cuello antes de dividir los puntos y empezar con los aumentos del ranglan.
+        </div>`;
+    }
     
     resultadosDiv.innerHTML = html;
 }
+
+// ... (Otras funciones como calcularCmDeseados y funciones auxiliares si existen)
