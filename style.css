@@ -1,190 +1,70 @@
 /*
  * --------------------------------
- * ESTILOS GENERALES Y FUENTES
+ * FOOTER Y REDES SOCIALES
  * --------------------------------
  */
 
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f7f3f0; /* Fondo crema suave */
-    color: #333;
-    line-height: 1.6;
-    padding: 20px;
-    margin: 0;
-}
-
-h1, h2, h3 {
-    font-family: 'Dancing Script', cursive; /* Tipografía manuscrita para títulos */
-    color: #8B4513; /* Tono marrón cálido */
+footer {
     text-align: center;
-    margin-bottom: 20px;
-    font-weight: 700;
+    padding: 20px 0;
+    margin-top: 20px;
+    border-top: 2px solid #D2B48C;
+    background-color: #fffaf7; 
+    border-radius: 0 0 15px 15px; /* Bordes redondeados solo abajo */
 }
 
-/* Título principal con más énfasis */
-h1 {
-    font-size: 2.8em;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #D2B48C;
+.footer-hr {
+    margin-bottom: 0;
 }
 
-/*
- * --------------------------------
- * CONTENEDORES PRINCIPALES
- * --------------------------------
- */
-
-#calculadora-app {
-    max-width: 700px;
-    margin: 30px auto;
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-}
-
-/*
- * --------------------------------
- * FORMULARIO DE ENTRADA
- * --------------------------------
- */
-
-.input-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #5C4033;
-}
-
-.input-group input,
-.input-group select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #D2B48C;
-    border-radius: 8px;
-    box-sizing: border-box;
-    transition: border-color 0.3s;
-}
-
-.input-group input:focus,
-.input-group select:focus {
-    border-color: #8B4513;
-    outline: none;
-    box-shadow: 0 0 5px rgba(139, 69, 19, 0.3);
-}
-
-/* Botón de calcular */
-button {
-    width: 100%;
-    padding: 12px;
-    background-color: #A0522D; /* Tono tierra */
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.1em;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.1s;
-    font-family: 'Roboto', sans-serif;
-}
-
-button:hover {
-    background-color: #8B4513;
-    transform: translateY(-1px);
-}
-
-/*
- * --------------------------------
- * RESULTADOS
- * --------------------------------
- */
-
-#resultados {
-    margin-top: 30px;
-    padding: 20px;
-    background-color: #fffaf7; /* Blanco roto */
-    border: 1px dashed #D2B48C; /* Borde discontinuo para un toque artesanal */
-    border-radius: 10px;
-}
-
-/* Resultado principal (puntos iniciales) */
-.resultado-principal {
-    font-size: 1.4em;
-    font-weight: bold;
-    color: #A0522D;
-    text-align: center;
-    padding: 10px 0;
-    margin: 15px 0;
-    border-top: 1px dashed #D2B48C;
-    border-bottom: 1px dashed #D2B48C;
-}
-
-/* Resultados de pasadas o medidas clave */
-.resultado-principal-manga {
-    font-size: 1.2em;
-    font-weight: 700;
-    color: #4CAF50; /* Verde para destacar la instrucción de aumento/disminución */
-}
-
-/* Notas y advertencias */
-.nota-medida, .nota-adicional {
-    font-size: 0.9em;
-    color: #666;
-    margin-top: 10px;
-    padding: 8px;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-}
-
-.nota-medida-importante {
-    display: block;
-    margin-top: 5px;
-    color: #B8860B; /* Dorado suave para destacar */
-    font-style: italic;
-    font-weight: bold;
-}
-
-/* Listas de distribución de puntos */
-#resultados ul {
-    list-style: none;
-    padding: 0;
-}
-
-#resultados li {
-    background-color: #fefefe;
-    border-left: 4px solid #D2B48C;
-    padding: 8px 15px;
-    margin-bottom: 5px;
-}
-
-hr {
-    border: 0;
-    height: 1px;
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), #D2B48C, rgba(0, 0, 0, 0));
-    margin: 25px 0;
-}
-/* Estilos para el encabezado de la marca */
-header {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.datos-tienda {
-    font-size: 1.1em;
-    color: #5C4033;
+footer h3 {
+    font-size: 1.8em;
     margin-bottom: 10px;
-    font-weight: 500;
+}
+
+.direccion-tienda {
+    font-size: 1em;
+    margin-bottom: 15px;
+    color: #5C4033;
+}
+
+.direccion-tienda a {
+    color: #5C4033;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.direccion-tienda a:hover {
+    text-decoration: underline;
+    color: #8B4513;
+}
+
+.redes-sociales {
+    margin-bottom: 20px;
 }
 
 .redes-sociales a {
     color: #A0522D; /* Tono tierra */
     text-decoration: none;
     font-weight: bold;
-    margin: 0 5px;
-    transition: color 0.3s;
+    margin: 0 8px;
+    padding: 8px 12px;
+    border: 1px solid #D2B48C;
+    border-radius: 5px;
+    display: inline-block;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .redes-sociales a:hover {
-    color: #8B4513;
-    text-decoration: underline;
+    background-color: #A0522D;
+    color: white;
+}
+
+.redes-sociales i {
+    margin-right: 5px;
+}
+
+.copyright {
+    font-size: 0.8em;
+    color: #999;
 }
