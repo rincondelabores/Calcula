@@ -1,5 +1,5 @@
 // =================================================================================
-// 1. DATOS DE TALLAS (MODIFICADO: numTalla vacío para bebés/niños)
+// 1. DATOS DE TALLAS
 // =================================================================================
 
 const DATOS_TALLAS = [
@@ -32,10 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
     cargarTallas(DATOS_TALLAS);
     document.getElementById('calculadora-form').addEventListener('submit', manejarCalculo);
     document.getElementById('metodo').addEventListener('change', actualizarUI);
-    actualizarUI();
+    actualizarUI(); // Ejecuta al inicio para establecer la vista por defecto
 });
 
-// MODIFICADO: Solo añade numTalla si existe para evitar duplicados y números en tallas pequeñas.
 function cargarTallas(datosTallas) {
     const selectorTalla = document.getElementById('selector-talla');
     selectorTalla.innerHTML = ''; 
@@ -54,47 +53,69 @@ function cargarTallas(datosTallas) {
     });
 }
 
+// MODIFICADO: Muestra/oculta campos según el método elegido
 function actualizarUI() {
     const metodo = document.getElementById('metodo').value;
     const piezaDiv = document.getElementById('pieza-div');
-    const tipoPrenda = document.getElementById('tipo-prenda').value;
+    const cmDeseadosDiv = document.getElementById('cm-deseados-div');
+    const ropaDiv = document.getElementById('ropa-div');
 
-    // Solo mostrar selector de pieza para el método "Empezar por el Bajo"
-    if (metodo === 'desde-bajo') {
-        piezaDiv.style.display = 'block';
+    if (metodo === 'cm-deseados') {
+        cmDeseadosDiv.style.display = 'block';
+        ropaDiv.style.display = 'none';
+        piezaDiv.style.display = 'none'; 
     } else {
-        piezaDiv.style.display = 'none';
+        cmDeseadosDiv.style.display = 'none';
+        ropaDiv.style.display = 'block';
+
+        // Solo mostrar selector de pieza para el método "Empezar por el Bajo"
+        if (metodo === 'desde-bajo') {
+            piezaDiv.style.display = 'block';
+        } else {
+            piezaDiv.style.display = 'none';
+        }
     }
 }
 
 function manejarCalculo(event) {
     event.preventDefault();
+    const resultadosDiv = document.getElementById('contenido-resultados');
+    resultadosDiv.style.display = 'block'; 
 
     const p10 = parseFloat(document.getElementById('puntos-10cm').value);
     const pa10Str = document.getElementById('pasadas-10cm').value;
-    const pa10 = pa10Str === '' ? 0 : parseFloat(pa10Str); // Acepta cadena vacía como 0
+    const pa10 = pa10Str === '' ? 0 : parseFloat(pa10Str);
     
     const metodo = document.getElementById('metodo').value;
-    const tipoPrenda = document.getElementById('tipo-prenda').value;
-    const etiquetaTalla = document.getElementById('selector-talla').value;
-    const pieza = document.getElementById('pieza').value;
 
     if (isNaN(p10) || p10 <= 0) {
         alert("Por favor, introduce un número válido de Puntos en 10cm.");
         return;
     }
 
+    if (metodo === 'cm-deseados') {
+        const cmDeseados = parseFloat(document.getElementById('cm-deseados-input').value);
+        if (isNaN(cmDeseados) || cmDeseados <= 0) {
+            alert("Por favor, introduce una Medida en Centímetros válida.");
+            return;
+        }
+        calcularCmDeseados(p10, pa10, cmDeseados);
+        return;
+    }
+    
+    // Para métodos basados en talla
+    const tipoPrenda = document.getElementById('tipo-prenda').value;
+    const etiquetaTalla = document.getElementById('selector-talla').value;
+    const pieza = document.getElementById('pieza').value;
     const datosTalla = DATOS_TALLAS.find(t => t.etiqueta === etiquetaTalla);
     if (!datosTalla) return;
+
 
     if (metodo === 'desde-bajo') {
         calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza);
     } else if (metodo === 'desde-escote') {
         calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda);
-    } else if (metodo === 'cm-deseados') {
-        // Asumiendo que esta función existe y maneja pa10 opcionalmente
-        calcularCmDeseados(p10, pa10, datosTalla); 
-    }
+    } 
 }
 
 // =================================================================================
@@ -102,35 +123,34 @@ function manejarCalculo(event) {
 // =================================================================================
 
 /**
+ * Función auxiliar para obtener la etiqueta de talla completa.
+ */
+function getTallaEtiqueta(datosTalla) {
+    return datosTalla.numTalla ? `${datosTalla.etiqueta} (${datosTalla.numTalla})` : datosTalla.etiqueta;
+}
+
+/**
  * Realiza el cálculo para el método "Empezar por el Bajo".
- * (CORREGIDO: Lógica de Chaqueta/Delantero, Escote y Pasadas Opcionales)
+ * (Corregido el formato, lógica de chaqueta, y pasadas opcionales)
  */
 function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
     const resultadosDiv = document.getElementById('contenido-resultados');
     const pXcm = p10 / 10;
     
-    // VALIDACIÓN DE PASADAS/VUELTAS (pa10 > 0)
     const pasadasValidas = pa10 > 0;
-    let paXcm = 0;
-    if (pasadasValidas) {
-        paXcm = pa10 / 10;
-    }
+    let paXcm = pasadasValidas ? pa10 / 10 : 0;
 
-    const tallaEtiquetaCompleta = datosTalla.numTalla ? `${datosTalla.etiqueta} (${datosTalla.numTalla})` : datosTalla.etiqueta;
+    const tallaEtiquetaCompleta = getTallaEtiqueta(datosTalla);
     let html = `<h3>📐 Resultados para Talla ${tallaEtiquetaCompleta} - Pieza: **${pieza.toUpperCase()}**</h3>`;
-
-    let anchoCM, anchoParaPuntos, largoCM;
+    let anchoCM, largoCM;
     
-    // Estimación de Profundidad de Escote Frontal (CORRECCIÓN DE VALORES)
+    // Estimación de Profundidad de Escote Frontal
     let profundidadEscoteFrontalCM;
     if (datosTalla.pechoCirc <= 56) {
-        // Bebé (3.0 a 4.0 cm)
         profundidadEscoteFrontalCM = 3.5; 
     } else if (datosTalla.pechoCirc <= 90) {
-        // Niño grande/Adulto pequeño (5.0 a 6.0 cm)
         profundidadEscoteFrontalCM = 6.0; 
     } else {
-        // Adulto estándar/grande (7.0 a 8.5 cm)
         profundidadEscoteFrontalCM = 8.0; 
     }
 
@@ -143,10 +163,8 @@ function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
     largoCM = datosTalla.largoTotal;
 
     if (pieza === 'espalda' || (pieza === 'delantero' && tipoPrenda === 'jersey')) {
-        // Espalda o Delantero Jersey = Mitad del contorno de pecho
         anchoCM = datosTalla.pechoCirc / 2;
-        anchoParaPuntos = anchoCM;
-        const puntosIniciales = Math.round(anchoParaPuntos * pXcm);
+        const puntosIniciales = Math.round(anchoCM * pXcm);
         
         html += `
             <p class="resultado-principal">Puntos a tejer para empezar (ancho ${anchoCM.toFixed(1)} cm): **${puntosIniciales} puntos**</p>
@@ -165,11 +183,9 @@ function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
         `;
 
     } else if (pieza === 'delantero' && tipoPrenda === 'chaqueta') {
-        // Delantero Chaqueta = Mitad del ancho de la espalda
         const anchoEspalda = datosTalla.pechoCirc / 2;
         anchoCM = anchoEspalda / 2; 
-        anchoParaPuntos = anchoCM;
-        const puntosIniciales = Math.round(anchoParaPuntos * pXcm);
+        const puntosIniciales = Math.round(anchoCM * pXcm);
         
         html += `
             <p class="resultado-principal">Puntos a tejer para empezar para **UNA MITAD** del delantero (ancho ${anchoCM.toFixed(1)} cm): **${puntosIniciales} puntos**</p>
@@ -192,9 +208,7 @@ function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
         `;
 
     } else if (pieza === 'mangas') {
-        anchoCM = datosTalla.pechoCirc * 0.2; 
         largoCM = datosTalla.largoManga;
-        
         const puntosSisa = Math.round(datosTalla.pechoCirc * 0.4 * pXcm);
         const puntosIniciales = Math.round(datosTalla.pechoCirc * 0.18 * pXcm); 
         const pasadasLargoManga = pasadasValidas ? Math.round(largoCM * paXcm) : null;
@@ -217,38 +231,27 @@ function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
 
 /**
  * Realiza el cálculo para el método "Empezar por el Escote (Top-Down)".
- * (CORREGIDO: Formato simple y Pasadas Opcionales)
+ * (Corregido el formato y pasadas opcionales)
  */
 function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
     const resultadosDiv = document.getElementById('contenido-resultados');
     const pXcm = p10 / 10;
     
-    // VALIDACIÓN DE PASADAS/VUELTAS (pa10 > 0)
     const pasadasValidas = pa10 > 0;
-    let paXcm = 0;
-    if (pasadasValidas) {
-        paXcm = pa10 / 10;
-    }
+    let paXcm = pasadasValidas ? pa10 / 10 : 0;
 
-    // 1. CÁLCULO DE PUNTOS TOTALES
+    // ... (Lógica de reparto de puntos y cálculo de montaje) ...
     const anchoCuelloCM = datosTalla.pechoCirc * 0.3; 
     const puntosEscoteTotal = Math.round(anchoCuelloCM * pXcm); 
-    
-    // 2. REPARTO BASE
     const puntosRanglan = 8;
     let puntosRestantes = puntosEscoteTotal - puntosRanglan;
     const puntosBasePorParte = puntosRestantes / 6;
-    
     let puntosEspalda = Math.round(puntosBasePorParte * 2.5);
     let puntosMangas = Math.round(puntosBasePorParte * 0.5);
     let puntosDelanteroTotal = puntosRestantes - puntosEspalda - (puntosMangas * 2);
-
-    let puntosDelantero = puntosDelanteroTotal;
-    if (tipoPrenda === 'chaqueta') {
-        puntosDelantero = Math.round(puntosDelanteroTotal / 2);
-    }
-
+    let puntosDelantero = tipoPrenda === 'chaqueta' ? Math.round(puntosDelanteroTotal / 2) : puntosDelanteroTotal;
     const puntosMontados = puntosEspalda + (puntosMangas * 2) + (puntosDelantero * (tipoPrenda === 'chaqueta' ? 2 : 1)) + puntosRanglan;
+    // ... (Fin de la lógica de reparto) ...
 
     // 3. CÁLCULO DE LARGOS EN PASADAS
     const largoRanglanCM = datosTalla.ranglan; 
@@ -258,7 +261,7 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
     const largoCuerpoCM = datosTalla.largoTotal - datosTalla.largoSisa;
     const pasadasLargoCuerpo = pasadasValidas ? Math.round(largoCuerpoCM * paXcm) : null;
     
-    const tallaEtiquetaCompleta = datosTalla.numTalla ? `${datosTalla.etiqueta} (${datosTalla.numTalla})` : datosTalla.etiqueta;
+    const tallaEtiquetaCompleta = getTallaEtiqueta(datosTalla);
     let html = `<h3>📐 Resultados Top-Down (Escote) para Talla ${tallaEtiquetaCompleta}</h3>`;
 
     html += `
@@ -299,47 +302,28 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
         </p>
     `;
     
-    if (pasadasValidas) {
-        html += `<div class="nota-adicional">
-            SUGERENCIA DE CUELLO: Sugerimos tejer al menos **${Math.round(2.5 * paXcm)} pasadas** (aprox. 2.5cm) en punto elástico (ej: 1/1, 2/2) para la terminación del cuello antes de dividir los puntos y empezar con los aumentos del ranglan.
-        </div>`;
-    } else {
-         html += `<div class="nota-adicional">
-            SUGERENCIA DE CUELLO: Sugerimos tejer al menos 2.5 cm en punto elástico (ej: 1/1, 2/2) para la terminación del cuello antes de dividir los puntos y empezar con los aumentos del ranglan.
-        </div>`;
-    }
+    // Sugerencia de cuello
+    const pasadasCuello = pasadasValidas ? Math.round(2.5 * paXcm) : null;
+
+    html += `<div class="nota-adicional">
+        SUGERENCIA DE CUELLO: Sugerimos tejer al menos ${pasadasValidas ? `**${pasadasCuello} pasadas** ` : ''} (aprox. 2.5cm) en punto elástico (ej: 1/1, 2/2) para la terminación del cuello antes de dividir los puntos y empezar con los aumentos del ranglan.
+    </div>`;
     
     resultadosDiv.innerHTML = html;
 }
 
-// ... (Otras funciones como calcularCmDeseados y funciones auxiliares si existen)
 /**
  * Realiza el cálculo para el método "Solo Regla de Tres (CM a Puntos)".
- * Calcula puntos y pasadas para cualquier centímetro deseado.
  * @param {number} p10 Puntos en 10cm.
  * @param {number} pa10 Pasadas en 10cm (Opcional).
+ * @param {number} cmDeseados Centímetros que el usuario desea medir.
  */
-function calcularCmDeseados(p10, pa10, datosTalla) {
+function calcularCmDeseados(p10, pa10, cmDeseados) {
     const resultadosDiv = document.getElementById('contenido-resultados');
     const pXcm = p10 / 10;
     
-    // VALIDACIÓN DE PASADAS/VUELTAS
     const pasadasValidas = pa10 > 0;
-    let paXcm = 0;
-    if (pasadasValidas) {
-        paXcm = pa10 / 10;
-    }
-
-    // Se necesita un campo de entrada para los CM deseados. 
-    // Por simplicidad, asumiremos que tienes un input con ID 'cm-deseados-input' 
-    // en tu HTML que solo se muestra con este método.
-
-    // *******************************************************************
-    // NOTA IMPORTANTE: Para que esto funcione, DEBES AÑADIR un nuevo input
-    // en tu HTML cuando se selecciona el método 'cm-deseados'.
-    // Por ahora, usamos un valor placeholder.
-    // *******************************************************************
-    const cmDeseados = 30; // <-- Cambia esto por el valor real del input del usuario
+    let paXcm = pasadasValidas ? pa10 / 10 : 0;
     
     const puntosNecesarios = Math.round(cmDeseados * pXcm);
     const pasadasNecesarias = pasadasValidas ? Math.round(cmDeseados * paXcm) : null;
