@@ -173,17 +173,17 @@ function agregarCalculoMangaBottomUp(html, pXcm, paXcm, pasadasValidas, datosTal
         // Los aumentos sobrantes (por el redondeo) se hacen al principio o se reparten
         const aumentosSobrantes = numeroDeEventosDeAumento - vecesRealAumentar;
 
-        html += `<p>Total de pasadas disponibles: <strong>${totalFilasParaManga}</strong> pasadas.</p>
-            <p>Deberás realizar **${numeroDeEventosDeAumento}** eventos de aumento (uno a cada lado).</p>
+        html += `<p>Total de pasadas a tejer: <strong>${totalFilasParaManga}</strong> pasadas.</p>
+            <p>Deberás realizar ${numeroDeEventosDeAumento} aumentos (uno a cada lado).</p>
             <p class="resultado-principal-manga">
-                Se recomienda hacer 1 aumento a cada lado cada **${aumentarFrecuenciaEnFilas}** pasadas.
+                Se recomienda hacer 1 aumento a cada lado cada ${aumentarFrecuenciaEnFilas} pasadas.
             </p>
             <p class="nota-medida">
                 *Esto cubrirá ${vecesRealAumentar * 2} de los ${totalIncrementoPuntadas} puntos. Si ${aumentosSobrantes > 0 ? `sobran ${aumentosSobrantes * 2} puntos, repártelos al inicio.` : 'no sobran aumentos, simplemente sigue la secuencia.'}*
             </p>`;
     } else {
         html += `<p class="resultado-principal-manga">
-            Reparte los **${totalIncrementoPuntadas}** puntos de aumento uniformemente a lo largo de los **${datosTalla.largoManga.toFixed(1)} cm** de la manga.
+            Reparte los ${totalIncrementoPuntadas}** puntos de aumento uniformemente a lo largo de los ${datosTalla.largoManga.toFixed(1)} cm de la manga.
         </p>
         <p class="nota-medida">
             *(Para la frecuencia exacta de pasadas, introduce el dato en el campo "Pasadas en 10cm").*
@@ -225,10 +225,10 @@ function agregarCalculoMangaTopDown(html, pXcm, paXcm, pasadasValidas, datosTall
         // Disminuciones sobrantes (por el redondeo)
         const disminucionesSobrantes = numeroDeEventosDeDisminucion - vecesRealDisminuir;
 
-        html += `<p>Total de pasadas disponibles: <strong>${totalFilasParaManga}</strong> pasadas.</p>
-            <p>Deberás realizar **${numeroDeEventosDeDisminucion}** eventos de disminución (uno a cada lado).</p>
+        html += `<p>Total de pasadas a tejer: <strong>${totalFilasParaManga}</strong> pasadas.</p>
+            <p>Deberás realizar ${numeroDeEventosDeDisminucion}disminuciones (uno a cada lado).</p>
             <p class="resultado-principal-manga">
-                Se recomienda hacer 1 disminución a cada lado cada **${disminuirFrecuenciaEnFilas}** pasadas.
+                Se recomienda hacer 1 disminución a cada lado cada ${disminuirFrecuenciaEnFilas} pasadas.
             </p>
             <p class="nota-medida">
                 *Esto cubrirá ${vecesRealDisminuir * 2} de los ${totalDisminucionPuntadas} puntos. Si ${disminucionesSobrantes > 0 ? `sobran ${disminucionesSobrantes * 2} puntos, repártelos uniformemente.` : 'no sobran disminuciones, simplemente sigue la secuencia.'}*
@@ -300,7 +300,7 @@ function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
         const puntosIniciales = Math.round(anchoCM * pXcm);
         
         html += `
-            <p class="resultado-principal">Puntos a tejer para empezar para **UNA MITAD** del delantero (ancho ${anchoCM.toFixed(1)} cm): <strong>${puntosIniciales} puntos</strong></p>
+            <p class="resultado-principal">Puntos a tejer para empezar para UNA MITAD del delantero (ancho ${anchoCM.toFixed(1)} cm): <strong>${puntosIniciales} puntos</strong></p>
             <p>Largo total de la pieza (desde bajo a cuello): ${largoCM.toFixed(1)} cm</p>
             <hr>
             <p>
@@ -315,7 +315,7 @@ function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
             </p>
 
             <div class="nota-adicional">
-                **NOTA IMPORTANTE - CHAQEUETA:** Estos puntos (${puntosIniciales} puntos) corresponden a **UNA** de las mitades del delantero (derecha o izquierda). ¡Recuerda que debes sumar los puntos necesarios para la **tapeta o borde** (ej: 5-10 puntos) a este resultado!
+                A tener en cuenta - CHAQUETA: Estos puntos (${puntosIniciales} puntos) corresponden a una de las mitades del delantero (derecha o izquierda). ¡Recuerda que debes sumar los puntos necesarios para la tapeta a este resultado!
             </div>
         `;
 
@@ -464,8 +464,8 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
     
     if (tipoPrenda === 'chaqueta') {
         html += `<div class="nota-adicional">
-            **ATENCIÓN - CHAQEUETA:** Los ${puntosDelantero} puntos son para **UNA** de las mitades del delantero. 
-            Recuerda sumar los puntos adicionales (ej: 5 a 10 puntos) para la **tapeta o borde** a cada mitad.
+            Tener en cuenta - CHAQUETA: Los ${puntosDelantero} puntos son para una de las mitades del delantero. 
+            Recuerda sumar los puntos adicionales para la tapeta a cada mitad.
         </div>`;
     }
 
@@ -477,7 +477,7 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
             ${pasadasValidas ? `<span class="nota-medida">(Esto requiere <strong>${pasadasRanglan} pasadas</strong> de aumento).</span>` : ''}
             
             <span class="nota-medida-importante">
-            * **IMPORTANTE:** Esta medida garantiza los puntos correctos en la sisa (${puntosFinalesManga} puntos por manga) con tu tensión y ritmo de aumento (cada 2 pasadas).
+            * IMPORTANTE: Esta medida garantiza los puntos correctos en la sisa (${puntosFinalesManga} puntos por manga) con tu tensión y ritmo de aumento (cada 2 pasadas).
             </span>
         </p>
         <p>
@@ -499,7 +499,7 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
 
     const pasadasCuello = pasadasValidas ? Math.round(2.5 * paXcm) : null;
     html += `<div class="nota-adicional">
-        SUGERENCIA DE CUELLO: Sugerimos tejer al menos ${pasadasValidas ? `<strong>${pasadasCuello} pasadas</strong> ` : ''} (aprox. 2.5cm) en punto elástico (ej: 1/1, 2/2) para la terminación del cuello antes de dividir los puntos y empezar con los aumentos del ranglan.
+        SUGERENCIA PARA LA TIRA DEL CUELLO: tejer al menos ${pasadasValidas ? `<strong>${pasadasCuello} pasadas</strong> ` : ''} (aprox. 1.5cm) en punto elástico, punto bobo... para la terminación del cuello antes de dividir los puntos y empezar con los aumentos del ranglan.
     </div>`;
     
     resultadosDiv.innerHTML = html;
