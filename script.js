@@ -1,5 +1,5 @@
 // =================================================================================
-// 1. DATOS DE TALLAS (FINAL: Ranglan y Sisa de Adulto ajustados a tus estándares)
+// 1. DATOS DE TALLAS (SECCIÓN INICIAL SIN CAMBIOS)
 // =================================================================================
 
 const DATOS_TALLAS = [
@@ -24,213 +24,15 @@ const DATOS_TALLAS = [
     { etiqueta: 'XXL', numTalla: '50-52', pechoCirc: 128, largoTotal: 68, largoManga: 62, largoSisa: 24, ranglan: 25, escoteBajoSisa: 19, cuelloCirc: 42 }
 ];
 
-// =================================================================================
-// 2. FUNCIONES DE INICIALIZACIÓN Y EVENTOS
-// =================================================================================
-
-document.addEventListener('DOMContentLoaded', () => {
-    cargarTallas(DATOS_TALLAS);
-    document.getElementById('calculadora-form').addEventListener('submit', manejarCalculo);
-    document.getElementById('metodo').addEventListener('change', actualizarUI);
-    actualizarUI(); // Ejecuta al inicio para establecer la vista por defecto
-});
-
-function cargarTallas(datosTallas) {
-    const selectorTalla = document.getElementById('selector-talla');
-    selectorTalla.innerHTML = ''; 
-
-    datosTallas.forEach(talla => {
-        let textoOpcion = talla.etiqueta;
-        
-        if (talla.numTalla && talla.numTalla !== '') {
-            textoOpcion += ` (${talla.numTalla})`; 
-        }
-
-        const opcion = document.createElement('option');
-        opcion.value = talla.etiqueta;
-        opcion.textContent = textoOpcion;
-        selectorTalla.appendChild(opcion);
-    });
-}
-
-// Muestra/oculta campos según el método elegido
-function actualizarUI() {
-    const metodo = document.getElementById('metodo').value;
-    const piezaDiv = document.getElementById('pieza-div');
-    const cmDeseadosDiv = document.getElementById('cm-deseados-div');
-    const ropaDiv = document.getElementById('ropa-div');
-
-    if (metodo === 'cm-deseados') {
-        cmDeseadosDiv.style.display = 'block';
-        ropaDiv.style.display = 'none';
-        piezaDiv.style.display = 'none'; 
-    } else {
-        cmDeseadosDiv.style.display = 'none';
-        ropaDiv.style.display = 'block';
-
-        // Solo mostrar selector de pieza para el método "Empezar por el Bajo"
-        if (metodo === 'desde-bajo') {
-            piezaDiv.style.display = 'block';
-        } else {
-            piezaDiv.style.display = 'none';
-        }
-    }
-}
-
-function manejarCalculo(event) {
-    event.preventDefault();
-    const resultadosDiv = document.getElementById('contenido-resultados');
-    resultadosDiv.style.display = 'block'; 
-
-    const p10 = parseFloat(document.getElementById('puntos-10cm').value);
-    const pa10Str = document.getElementById('pasadas-10cm').value;
-    const pa10 = pa10Str === '' ? 0 : parseFloat(pa10Str);
-    
-    const metodo = document.getElementById('metodo').value;
-
-    if (isNaN(p10) || p10 <= 0) {
-        alert("Por favor, introduce un número válido de Puntos en 10cm.");
-        return;
-    }
-
-    if (metodo === 'cm-deseados') {
-        const cmDeseados = parseFloat(document.getElementById('cm-deseados-input').value);
-        if (isNaN(cmDeseados) || cmDeseados <= 0) {
-            alert("Por favor, introduce una Medida en Centímetros válida.");
-            return;
-        }
-        calcularCmDeseados(p10, pa10, cmDeseados);
-        return;
-    }
-    
-    // Para métodos basados en talla
-    const tipoPrenda = document.getElementById('tipo-prenda').value;
-    const etiquetaTalla = document.getElementById('selector-talla').value;
-    const pieza = document.getElementById('pieza').value;
-    const datosTalla = DATOS_TALLAS.find(t => t.etiqueta === etiquetaTalla);
-    if (!datosTalla) return;
-
-
-    if (metodo === 'desde-bajo') {
-        calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza);
-    } else if (metodo === 'desde-escote') {
-        calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda);
-    } 
-}
+// (El resto de funciones de inicialización y cálculo se mantienen igual hasta calcularDesdeEscote)
 
 // =================================================================================
-// 3. FUNCIONES DE CÁLCULO
+// 3. FUNCIONES DE CÁLCULO (FUNCIÓN MODIFICADA)
 // =================================================================================
 
-/**
- * Función auxiliar para obtener la etiqueta de talla completa.
- */
-function getTallaEtiqueta(datosTalla) {
-    return datosTalla.numTalla ? `${datosTalla.etiqueta} (${datosTalla.numTalla})` : datosTalla.etiqueta;
-}
+// (Funciones auxiliares y calcularDesdeBajo van aquí, sin cambios)
 
-/**
- * Realiza el cálculo para el método "Empezar por el Bajo".
- */
-function calcularDesdeBajo(p10, pa10, datosTalla, tipoPrenda, pieza) {
-    const resultadosDiv = document.getElementById('contenido-resultados');
-    const pXcm = p10 / 10;
-    
-    const pasadasValidas = pa10 > 0;
-    let paXcm = pasadasValidas ? pa10 / 10 : 0;
-
-    const tallaEtiquetaCompleta = getTallaEtiqueta(datosTalla);
-    let html = `<h3>📐 Resultados para Talla ${tallaEtiquetaCompleta} - Pieza: ${pieza.toUpperCase()}</h3>`;
-    let anchoCM, largoCM;
-    
-    // Estimación de Profundidad de Escote Frontal
-    let profundidadEscoteFrontalCM;
-    if (datosTalla.pechoCirc <= 56) {
-        profundidadEscoteFrontalCM = 3.5; 
-    } else if (datosTalla.pechoCirc <= 90) {
-        profundidadEscoteFrontalCM = 6.0; 
-    } else {
-        profundidadEscoteFrontalCM = 8.0; 
-    }
-
-    // Cálculos de largos comunes
-    const largoBajoSisa = datosTalla.largoTotal - datosTalla.largoSisa;
-    
-    const pasadasBajoSisa = pasadasValidas ? Math.round(largoBajoSisa * paXcm) : null;
-    const pasadasHastaEscote = pasadasValidas ? Math.round((datosTalla.largoTotal - datosTalla.escoteBajoSisa) * paXcm) : null;
-    
-    largoCM = datosTalla.largoTotal;
-
-    if (pieza === 'espalda' || (pieza === 'delantero' && tipoPrenda === 'jersey')) {
-        anchoCM = datosTalla.pechoCirc / 2;
-        const puntosIniciales = Math.round(anchoCM * pXcm);
-        
-        html += `
-            <p class="resultado-principal">Puntos a tejer para empezar (ancho ${anchoCM.toFixed(1)} cm): <strong>${puntosIniciales} puntos</strong></p>
-            <p>Largo total de la pieza (desde bajo a cuello): ${largoCM.toFixed(1)} cm</p>
-            <hr>
-            <p>
-                Inicio de la Sisa: A los ${largoBajoSisa.toFixed(1)} cm desde el bajo. 
-                ${pasadasValidas ? `(Aproximadamente <strong>${pasadasBajoSisa} pasadas</strong>).` : ''}
-                <span class="nota-medida">(Sisa: ${datosTalla.largoSisa.toFixed(1)} cm)</span>
-            </p>
-            <p>
-                Inicio del Escote (Redondo): A los ${(datosTalla.largoTotal - datosTalla.escoteBajoSisa).toFixed(1)} cm desde el bajo. 
-                ${pasadasValidas ? `(Aproximadamente <strong>${pasadasHastaEscote} pasadas</strong>).` : ''}
-                <span class="nota-medida">(Para un escote redondo estándar, la curva delantera tendrá una profundidad de aprox. ${profundidadEscoteFrontalCM.toFixed(1)} cm).</span>
-            </p>
-        `;
-
-    } else if (pieza === 'delantero' && tipoPrenda === 'chaqueta') {
-        const anchoEspalda = datosTalla.pechoCirc / 2;
-        anchoCM = anchoEspalda / 2; 
-        const puntosIniciales = Math.round(anchoCM * pXcm);
-        
-        html += `
-            <p class="resultado-principal">Puntos a tejer para empezar para **UNA MITAD** del delantero (ancho ${anchoCM.toFixed(1)} cm): <strong>${puntosIniciales} puntos</strong></p>
-            <p>Largo total de la pieza (desde bajo a cuello): ${largoCM.toFixed(1)} cm</p>
-            <hr>
-            <p>
-                Inicio de la Sisa: A los ${largoBajoSisa.toFixed(1)} cm desde el bajo. 
-                ${pasadasValidas ? `(Aproximadamente <strong>${pasadasBajoSisa} pasadas</strong>).` : ''}
-                <span class="nota-medida">(Sisa: ${datosTalla.largoSisa.toFixed(1)} cm)</span>
-            </p>
-            <p>
-                Inicio del Escote (Redondo): A los ${(datosTalla.largoTotal - datosTalla.escoteBajoSisa).toFixed(1)} cm desde el bajo. 
-                ${pasadasValidas ? `(Aproximadamente <strong>${pasadasHastaEscote} pasadas</strong>).` : ''}
-                <span class="nota-medida">(Para un escote redondo estándar, la curva delantera tendrá una profundidad de aprox. ${profundidadEscoteFrontalCM.toFixed(1)} cm).</span>
-            </p>
-
-            <div class="nota-adicional">
-                **NOTA IMPORTANTE - CHAQEUETA:** Estos puntos (${puntosIniciales} puntos) corresponden a **UNA** de las mitades del delantero (derecha o izquierda). ¡Recuerda que debes sumar los puntos necesarios para la **tapeta o borde** (ej: 5-10 puntos) a este resultado!
-            </div>
-        `;
-
-    } else if (pieza === 'mangas') {
-        largoCM = datosTalla.largoManga;
-        // La fórmula pCirc * 0.4 asegura un ancho de manga cerca del doble de largoSisa
-        const puntosSisa = Math.round(datosTalla.pechoCirc * 0.4 * pXcm);
-        const puntosIniciales = Math.round(datosTalla.pechoCirc * 0.18 * pXcm); 
-        const pasadasLargoManga = pasadasValidas ? Math.round(largoCM * paXcm) : null;
-        
-        // CÁLCULO DE ANCHO DE MANGA PARA MOSTRAR AL USUARIO
-        const anchoMangaSisaCM = datosTalla.largoSisa * 2; 
-
-        html += `
-            <p class="resultado-principal">Puntos a tejer para empezar (Puño, ancho aprox. ${(datosTalla.pechoCirc * 0.18).toFixed(1)} cm): <strong>${puntosIniciales} puntos</strong></p>
-            <p>Puntos que deberá tener la manga al llegar a la sisa (Ancho Aprox. ${anchoMangaSisaCM.toFixed(1)} cm): <strong>${puntosSisa} puntos</strong></p>
-            <p>Largo total de la manga (desde sisa a puño): ${largoCM.toFixed(1)} cm</p>
-            <hr>
-            <p>
-                Deberás tejer ${largoCM.toFixed(1)} cm. Aumenta puntos de manera uniforme para pasar de ${puntosIniciales} puntos a ${puntosSisa} puntos.
-            </p>
-            ${pasadasValidas ? `<p>Total de pasadas hasta el puño: <strong>${pasadasLargoManga} pasadas</strong>.</p>` : ''}
-        `;
-    }
-    
-    resultadosDiv.innerHTML = html;
-}
-
+// ...
 
 /**
  * Realiza el cálculo para el método "Empezar por el Escote (Top-Down - Ranglán)".
@@ -243,53 +45,55 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
     let paXcm = pasadasValidas ? pa10 / 10 : 0;
 
     // 1. CÁLCULO DE PUNTOS TOTALES DEL CUELLO
-    const anchoCuelloBaseCM = datosTalla.cuelloCirc;
-    
+    let anchoCuelloCM;
     let holguraCuelloCM = 0;
-    // Aplicar holgura de cuello (+7 cm) solo para tallas de adulto (Pecho >= 80cm)
+    const cuelloCircBase = datosTalla.cuelloCirc;
+    
+    // El 80% del contorno de cabeza es la medida base para montar los puntos
+    anchoCuelloCM = cuelloCircBase * 0.8; 
+    
+    // Aplicar holgura adicional (+7 cm) solo para tallas de adulto si se desea
     if (datosTalla.pechoCirc >= 80) { 
         holguraCuelloCM = 7;
+        anchoCuelloCM += holguraCuelloCM; // Sumamos los 7cm de holgura de cuello
     } 
 
-    const anchoCuelloCM = anchoCuelloBaseCM + holguraCuelloCM; 
     const puntosMontadosTotal = Math.round(anchoCuelloCM * pXcm); 
     
     const puntosRanglanFijos = 8;
     let puntosRestantes = puntosMontadosTotal - puntosRanglanFijos;
 
-    // A. REPARTO ESTÁNDAR 3-3-1-1 
-    const unidadBase = puntosRestantes / 8;
+    // 2. REPARTO DE PUNTOS (Método 1/6 - 2/6 - 2/6 - 1/6)
     
-    // Asignación base (puede tener decimales)
-    let pEspaldaBase = unidadBase * 3;
-    let pDelanteroBase = unidadBase * 3;
-    let pMangasBase = unidadBase * 1;
-
-    // Redondeo y ajuste para que la suma sea exacta
-    let puntosEspalda = Math.round(pEspaldaBase);
-    let puntosMangas = Math.round(pMangasBase);
+    // La unidad base es la sexta parte de los puntos restantes
+    const unidadBase = puntosRestantes / 6; 
     
-    let puntosDelanteroTotal = puntosRestantes - puntosEspalda - (puntosMangas * 2);
+    let puntosEspalda, puntosMangas, puntosDelantero, puntosDelanteroTotal;
 
-    let puntosDelantero = puntosDelanteroTotal;
     if (tipoPrenda === 'chaqueta') {
-        puntosDelantero = Math.round(puntosDelanteroTotal / 2);
-        // Ajuste fino: la diferencia del redondeo se suma/resta a la espalda
-        const sumaCheck = puntosEspalda + (puntosMangas * 2) + (puntosDelantero * 2) + puntosRanglanFijos;
-        if (sumaCheck !== puntosMontadosTotal) {
-             puntosEspalda += puntosMontadosTotal - sumaCheck; 
-        }
+        // REPARTO PARA CHAQEUETA (1/6 para cada manga, 1/6 para cada delantero, 2/6 para espalda)
+        puntosMangas = Math.round(unidadBase * 1); // 1/6
+        puntosEspalda = Math.round(unidadBase * 2); // 2/6
+        puntosDelantero = Math.round(unidadBase * 1); // 1/6 (Para CADA mitad del delantero)
+        
+        // El total de partes es 1(Manga) + 1(Delantero) + 2(Espalda) + 1(Delantero) + 1(Manga) = 6
+        puntosDelanteroTotal = puntosDelantero * 2;
+        
     } else {
-        // Jersey: Ajuste fino
-        const sumaCheck = puntosEspalda + (puntosMangas * 2) + puntosDelanteroTotal + puntosRanglanFijos;
-        if (sumaCheck !== puntosMontadosTotal) {
-             puntosEspalda += puntosMontadosTotal - sumaCheck; 
-             puntosDelantero = puntosDelanteroTotal;
-        } else {
-            puntosDelantero = puntosDelanteroTotal;
-        }
+        // REPARTO PARA JERSEY CERRADO (1/6 para cada manga, 2/6 para delantero, 2/6 para espalda)
+        puntosMangas = Math.round(unidadBase * 1); // 1/6
+        puntosEspalda = Math.round(unidadBase * 2); // 2/6
+        puntosDelantero = Math.round(unidadBase * 2); // 2/6 (Pieza única)
+        puntosDelanteroTotal = puntosDelantero;
     }
 
+    // Ajuste fino para asegurar que la suma de los puntos sea EXACTAMENTE puntosMontadosTotal
+    const sumaActual = puntosEspalda + (puntosMangas * 2) + puntosDelanteroTotal + puntosRanglanFijos;
+    const diferencia = puntosMontadosTotal - sumaActual;
+    
+    // Ajustar la diferencia a la pieza más grande (Espalda) para mantener las proporciones.
+    puntosEspalda += diferencia;
+    
     // 3. CÁLCULO DE LARGOS EN PASADAS
     const largoRanglanCM = datosTalla.ranglan; 
     const pasadasRanglan = pasadasValidas ? Math.round(largoRanglanCM * paXcm) : null;
@@ -302,14 +106,15 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
     let html = `<h3>📐 Resultados Top-Down (Escote) para Talla ${tallaEtiquetaCompleta}</h3>`;
 
     html += `
-        <p class="resultado-principal">Puntos para montar en el escote (ancho ${anchoCuelloCM.toFixed(1)} cm con ${holguraCuelloCM.toFixed(1)} cm de holgura): <strong>${puntosMontadosTotal} puntos</strong></p>
+        <p class="resultado-principal">Puntos para montar en el escote (ancho ${anchoCuelloCM.toFixed(1)} cm): <strong>${puntosMontadosTotal} puntos</strong></p>
+        <p class="nota-medida">*(Calculado como el 80% del contorno de cabeza + ${holguraCuelloCM} cm de holgura adicional si es adulto)*</p>
         <hr>
         
-        <h4>Reparto de Puntos Inicial (Antes de empezar a hacer aumentos):</h4>
+        <h4>Reparto de Puntos Inicial (Método ${tipoPrenda === 'chaqueta' ? '1-1-2-1-1' : '1-2-2-1'}):</h4>
         <ul>
-            <li>Espalda: <strong>${puntosEspalda}</strong> puntos.</li>
-            <li>Mangas (cada una): <strong>${puntosMangas}</strong> puntos.</li>
-            <li>Delantero (${tipoPrenda === 'chaqueta' ? 'cada mitad' : 'pieza única'}): <strong>${puntosDelantero}</strong> puntos.</li>
+            <li>Espalda (2/6 partes): <strong>${puntosEspalda}</strong> puntos.</li>
+            <li>Mangas (cada una - 1/6 parte): <strong>${puntosMangas}</strong> puntos.</li>
+            <li>Delantero (${tipoPrenda === 'chaqueta' ? 'cada mitad - 1/6 parte' : 'pieza única - 2/6 partes'}): <strong>${puntosDelantero}</strong> puntos.</li>
             <li>Ranglan (4 líneas): 2 puntos por línea (8 puntos en total).</li>
         </ul>
         <p class="nota-medida">*(El total de puntos iniciales es ${puntosMontadosTotal} puntos)*</p>
@@ -347,23 +152,4 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
     resultadosDiv.innerHTML = html;
 }
 
-/**
- * Realiza el cálculo para el método "Solo Regla de Tres (CM a Puntos)".
- */
-function calcularCmDeseados(p10, pa10, cmDeseados) {
-    const resultadosDiv = document.getElementById('contenido-resultados');
-    const pXcm = p10 / 10;
-    
-    const pasadasValidas = pa10 > 0;
-    let paXcm = pasadasValidas ? pa10 / 10 : 0;
-    
-    const puntosNecesarios = Math.round(cmDeseados * pXcm);
-    const pasadasNecesarias = pasadasValidas ? Math.round(cmDeseados * paXcm) : null;
-    
-    let html = `<h3>📏 Resultados para ${cmDeseados.toFixed(1)} cm Deseados</h3>`;
-
-    html += `
-        <p class="resultado-principal">Puntos necesarios: <strong>${puntosNecesarios} puntos</strong></p>
-        <hr>
-        <p>
-            Esto significa que para tejer **${cmDese
+// ... (Resto de funciones sin cambios)
