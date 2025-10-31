@@ -226,7 +226,7 @@ function agregarCalculoMangaTopDown(html, pXcm, paXcm, pasadasValidas, datosTall
         const disminucionesSobrantes = numeroDeEventosDeDisminucion - vecesRealDisminuir;
 
         html += `<p>Total de pasadas a tejer: <strong>${totalFilasParaManga}</strong> pasadas.</p>
-            <p>Deberás realizar ${numeroDeEventosDeDisminucion}disminuciones (uno a cada lado).</p>
+            <p>Deberás realizar ${numeroDeEventosDeDisminucion} disminuciones (uno a cada lado).</p>
             <p class="resultado-principal-manga">
                 Se recomienda hacer 1 disminución a cada lado cada ${disminuirFrecuenciaEnFilas} pasadas.
             </p>
@@ -441,7 +441,7 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
 
     html += `
         <p class="resultado-principal">Puntos a montar en el escote: <strong>${puntosMontadosTotal} puntos</strong></p>
-        <p class="nota-medida">*(Para un ancho aproximado de ${anchoCuelloCM.toFixed(1)} cm)*</p>
+        <p class="nota-medida">*(Para contorno de escote aproximado de ${anchoCuelloCM.toFixed(1)} cm)*</p>
         <hr>
         
         <h4>Distribución de Puntos Inicial:</h4>
@@ -454,7 +454,7 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
     if (tipoPrenda === 'chaqueta') {
         html += `<li>Delantero (cada mitad): <strong>${puntosDelantero}</strong> puntos.</li>`;
     } else {
-        html += `<li>Delantero (pieza única): <strong>${puntosDelantero}</strong> puntos.</li>`;
+        html += `<li>Delantero : <strong>${puntosDelantero}</strong> puntos.</li>`;
     }
 
     html += `
@@ -473,11 +473,11 @@ function calcularDesdeEscote(p10, pa10, datosTalla, tipoPrenda) {
         <hr>
         <h4>Instrucciones de Largo:</h4>
         <p>
-            Largo del Ranglan (Diagonal Escote a Sisa): Teje hasta que la línea de ranglan mida **${largoRanglanCM.toFixed(1)} cm**.
+            Largo del Ranglan (linea desde escote a sisa): Teje hasta que la línea de ranglan mida ${largoRanglanCM.toFixed(1)} cm.
             ${pasadasValidas ? `<span class="nota-medida">(Esto requiere <strong>${pasadasRanglan} pasadas</strong> de aumento).</span>` : ''}
             
             <span class="nota-medida-importante">
-            * IMPORTANTE: Esta medida garantiza los puntos correctos en la sisa (${puntosFinalesManga} puntos por manga) con tu tensión y ritmo de aumento (cada 2 pasadas).
+            * Con esa medida del ranglan debes obtener los puntos correctos en la sisa (${puntosFinalesManga} puntos por manga) con tu tensión y ritmo de aumento (cada 2 pasadas).
             </span>
         </p>
         <p>
