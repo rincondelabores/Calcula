@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Puntos y Tallas | Rincón de Labores</title>
+    <title>Calcula tus puntos con Rincón de Labores</title>
     
     <link rel="stylesheet" href="style.css">
     
@@ -12,7 +12,18 @@
 <body>
 
     <div id="calculadora-app">
-        <h1 id="titulo-calculadora">Calculadora de Labores</h1>
+        
+        <header>
+            <h1 id="titulo-calculadora">Calcula tus puntos con Rincón de Labores</h1>
+            <p class="datos-tienda">📍 **Tu tienda:** Rincón de labores - Alquerías, Murcia</p>
+            <div class="redes-sociales">
+                <a href="#" target="_blank" title="Instagram">Instagram</a> | 
+                <a href="#" target="_blank" title="Facebook">Facebook</a> | 
+                <a href="#" target="_blank" title="Pinterest">Pinterest</a>
+            </div>
+        </header>
+        
+        <hr>
 
         <form id="calculadora-form">
             
@@ -23,7 +34,7 @@
             </div>
             
             <div class="input-group">
-                <label for="pasadas-10cm">Pasadas (hileras) en 10 cm (Largo) <span class="nota-medida">(Opcional, para calcular pasadas)</span>:</label>
+                <label for="pasadas-10cm">Pasadas (hileras) en 10 cm  <span class="nota-medida">(*Opcional* para calcular pasadas)</span>:</label>
                 <input type="number" id="pasadas-10cm" value="28" min="0">
             </div>
             
@@ -33,14 +44,14 @@
             <div class="input-group">
                 <label for="metodo">Quiero calcular:</label>
                 <select id="metodo">
-                    <option value="cm-deseados">Puntos/Pasadas para CM Deseados</option>
-                    <option value="desde-escote">Prenda desde el Escote (Top-Down / Ranglan)</option>
-                    <option value="desde-bajo">Prenda desde el Bajo (Bottom-Up / Piezas)</option>
+                    <option value="cm-deseados">Puntos/Pasadas para cm Deseados</option>
+                    <option value="desde-escote">Tejida desde el Escote (Ranglan)</option>
+                    <option value="desde-bajo">Tejida desde el Bajo </option>
                 </select>
             </div>
             
             <div id="cm-deseados-div" class="input-group">
-                <label for="cm-deseados-input">Medida en Centímetros Deseados:</label>
+                <label for="cm-deseados-input">Medida en cm Deseados:</label>
                 <input type="number" id="cm-deseados-input" value="100" min="1">
             </div>
 
@@ -48,13 +59,13 @@
                 <div class="input-group">
                     <label for="tipo-prenda">Tipo de Prenda:</label>
                     <select id="tipo-prenda">
-                        <option value="jersey">Jersey/Suéter (cerrado)</option>
-                        <option value="chaqueta">Chaqueta/Cárdigan (abierto)</option>
+                        <option value="jersey">Jersey/Suéter </option>
+                        <option value="chaqueta">Chaqueta/Cárdigan </option>
                     </select>
                 </div>
 
                 <div class="input-group">
-                    <label for="selector-talla">Talla (Estándar):</label>
+                    <label for="selector-talla">Talla :</label>
                     <select id="selector-talla">
                         </select>
                 </div>
@@ -62,7 +73,7 @@
 
             <div id="pieza-div" style="display: none;">
                 <div class="input-group">
-                    <label for="pieza">Pieza a calcular (si es Bottom-Up):</label>
+                    <label for="pieza">Parte a tejer:</label>
                     <select id="pieza">
                         <option value="espalda">Espalda</option>
                         <option value="delantero">Delantero</option>
@@ -71,7 +82,7 @@
                 </div>
             </div>
 
-            <button type="submit">Calcular Puntos y Medidas</button>
+            <button type="submit">Calcula los puntos y medidas</button>
 
         </form>
 
